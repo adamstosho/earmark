@@ -1,0 +1,156 @@
+/* Motion, the landing hero graphic and the logo. Tokens only (D8). Everything here stops under prefers-reduced-motion.
+   Decision C57: the design system says motion confirms and never decorates; the owner asked for a living landing page and logo,
+   so decoration is allowed on the landing page and in the logo only. Signed-in screens keep short, functional transitions. */
+
+/* The live pocket floats over the foot of the hero graphic. */
+.app-hero__live { position: relative; z-index: 2; width: min(100%, 360px); margin: calc(-1 * var(--space-10)) 0 0 auto; }
+
+/* ------------------------------------------------------------------ hero graphic */
+.app-art {
+  position: relative; width: 100%; max-width: 520px; aspect-ratio: 1; margin-inline: auto; isolation: isolate; overflow: hidden;
+  border: 1px solid var(--line); border-radius: var(--radius-xl); box-shadow: var(--shadow-md);
+  background: radial-gradient(120% 90% at 50% 0%, var(--brand-soft), var(--surface) 72%);
+}
+.app-art__bg, .app-art__square { position: absolute; inset: 0; }
+.app-art__blob {
+  position: absolute; width: 62%; aspect-ratio: 1; border-radius: var(--radius-full);
+  animation: app-drift 18s ease-in-out infinite alternate;
+}
+.app-art__blob--a { top: -14%; left: -12%; background: radial-gradient(circle, color-mix(in srgb, var(--pocket-sky) 38%, transparent), transparent 68%); }
+.app-art__blob--b { right: -16%; bottom: -12%; background: radial-gradient(circle, color-mix(in srgb, var(--pocket-palm) 36%, transparent), transparent 68%); animation-duration: 22s; animation-delay: -6s; }
+.app-art__blob--c { right: 6%; top: -18%; width: 46%; background: radial-gradient(circle, color-mix(in srgb, var(--pocket-plum) 30%, transparent), transparent 68%); animation-duration: 26s; animation-delay: -11s; }
+.app-art__grid {
+  position: absolute; inset: 0; background-image: radial-gradient(var(--line-strong) 1px, transparent 1.4px); background-size: 24px 24px; opacity: 0.45;
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, var(--ink) 18%, transparent 74%); mask-image: radial-gradient(circle at 50% 50%, var(--ink) 18%, transparent 74%);
+}
+.app-art__rings { position: absolute; inset: 0; width: 100%; height: 100%; }
+.app-art__ring { fill: none; stroke: var(--line-strong); transform-box: fill-box; transform-origin: center; }
+.app-art__ring--a { stroke-width: 1.4; stroke-dasharray: 2 9; animation: app-spin 60s linear infinite; }
+.app-art__ring--b { stroke-width: 1; opacity: 0.55; }
+.app-art__ring--c { stroke-width: 1.2; stroke-dasharray: 7 11; opacity: 0.5; animation: app-spin 90s linear infinite reverse; }
+
+.app-art__orbit { position: absolute; border-radius: var(--radius-full); animation: app-spin var(--dur) linear infinite; }
+.app-art__orbit--coins { inset: 1.5%; --dur: 20s; }
+.app-art__orbit--outer { inset: 8%; --dur: 72s; animation-direction: reverse; }
+.app-art__orbit--inner { inset: 20.5%; --dur: 50s; }
+.app-art__slot { position: absolute; inset: 0; rotate: var(--a); }
+.app-art__chip {
+  position: absolute; top: 0; left: 50%; translate: -50% -50%; display: grid; padding: 5px;
+  border: 1px solid var(--line); border-radius: var(--radius-full); background: var(--surface); box-shadow: var(--shadow-md);
+  animation: app-counter var(--dur) linear infinite;
+}
+.app-art__orbit--outer .app-art__chip { animation-direction: reverse; }
+.app-art__coin {
+  position: absolute; top: 0; left: 50%; translate: -50% -50%; width: 10px; height: 10px; border-radius: var(--radius-full); background: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent), 0 0 18px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+.app-art__core {
+  position: absolute; left: 36%; top: 36%; width: 28%; height: 28%; display: grid; place-items: center; z-index: 2;
+  border: 1px solid var(--line); border-radius: 30%; background: var(--surface); box-shadow: var(--shadow-lg);
+  animation: app-float 6s ease-in-out infinite;
+}
+.app-art__halo { position: absolute; inset: 0; border: 2px solid var(--brand); border-radius: inherit; opacity: 0; animation: app-halo 4.4s ease-out infinite; }
+.app-art__halo--late { animation-delay: 2.2s; }
+.app-art__tag { position: relative; width: 66%; height: auto; transform-origin: 14% 50%; animation: app-swing 5.5s ease-in-out infinite alternate; }
+
+.app-art__card {
+  position: absolute; z-index: 3; display: flex; align-items: center; gap: var(--space-2); width: 34%; padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--line); border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+  background: color-mix(in srgb, var(--surface) 88%, transparent); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  animation: app-float 7s ease-in-out infinite;
+}
+.app-art__card--one { left: 5%; top: 11%; }
+.app-art__card--two { right: 5%; bottom: 11%; animation-delay: -3.5s; }
+.app-art__lines { display: grid; flex: 1; gap: var(--space-2); min-width: 0; }
+.app-art__line { height: 6px; width: 72%; border-radius: var(--radius-full); background: var(--line); }
+.app-art__track { display: block; height: 6px; border-radius: var(--radius-full); background: var(--surface-sunken); overflow: hidden; }
+.app-art__fill { display: block; height: 100%; border-radius: inherit; background: var(--pocket-palm); transform-origin: left; animation: app-fill 4.6s ease-in-out infinite alternate; }
+.app-art__fill--sky { background: var(--pocket-sky); animation-duration: 5.8s; animation-delay: -2s; }
+.app-art__spark {
+  position: absolute; width: 6px; height: 6px; border-radius: var(--radius-full); background: var(--brand); opacity: 0; animation: app-twinkle 3.4s ease-in-out infinite;
+}
+.app-art[data-paused] *, .app-art[data-paused] *::before { animation-play-state: paused !important; }
+
+/* ------------------------------------------------------------------ logo */
+svg.ek-logo .ek-logo__tag, svg.ek-logo .ek-logo__ring { transform-box: fill-box; }
+svg.ek-logo .ek-logo__tag {
+  transform-origin: 18% 50%;
+  animation: app-tag-hang 1.1s var(--ek-ease) 0.25s backwards, app-tag-idle 10s ease-in-out 3s infinite;
+}
+svg.ek-logo .ek-logo__ring { transform-origin: center; animation: app-ring-pulse 5s ease-in-out 1.4s infinite; }
+a:hover > svg.ek-logo .ek-logo__tag { animation: app-tag-idle 1.6s ease-in-out infinite; }
+
+/* ------------------------------------------------------------------ motion */
+.app-rise { animation: app-rise 760ms var(--ek-ease) both; animation-delay: calc(var(--i, 0) * 100ms); }
+.app-rise--scale { animation-name: app-rise-scale; }
+[data-reveal] { opacity: 0; }
+[data-reveal].is-in { opacity: 1; animation: app-reveal 720ms var(--ek-ease) backwards; animation-delay: calc(var(--i, 0) * 120ms); }
+
+/* Each screen eases in, and cards and rows arrive one after another. */
+.ek-page { animation: app-page-in 380ms var(--ek-ease) backwards; }
+.app-landing .ek-page { animation: none; }
+.ek-grid > *, .ek-activitylist > * { animation: app-rise-sm 440ms var(--ek-ease) backwards; }
+.ek-grid > :nth-child(2), .ek-activitylist > :nth-child(2) { animation-delay: 50ms; }
+.ek-grid > :nth-child(3), .ek-activitylist > :nth-child(3) { animation-delay: 100ms; }
+.ek-grid > :nth-child(4), .ek-activitylist > :nth-child(4) { animation-delay: 150ms; }
+.ek-grid > :nth-child(5), .ek-activitylist > :nth-child(5) { animation-delay: 200ms; }
+.ek-grid > :nth-child(n + 6), .ek-activitylist > :nth-child(n + 6) { animation-delay: 250ms; }
+
+/* Cards lift a little under a pointer; presses sink. */
+.ek-pocket, .ek-request, .app-card { transition: transform var(--ek-dur-slow) var(--ek-ease), box-shadow var(--ek-dur-slow) var(--ek-ease), border-color var(--ek-dur) var(--ek-ease); }
+@media (hover: hover) {
+  .ek-pocket:hover, .ek-request:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--line-strong); }
+  .ek-btn--primary:hover:not(:disabled) { box-shadow: var(--shadow-md); }
+}
+.ek-btn { transition: background-color var(--ek-dur-fast) var(--ek-ease), border-color var(--ek-dur-fast) var(--ek-ease), box-shadow var(--ek-dur) var(--ek-ease), transform var(--ek-dur-fast) var(--ek-ease); }
+.ek-btn:active:not(:disabled), .ek-iconbtn:active:not(:disabled) { transform: scale(0.97); }
+
+@keyframes app-rise { from { opacity: 0; transform: translateY(20px); } }
+@keyframes app-rise-scale { from { opacity: 0; transform: translateY(14px) scale(0.94); } }
+@keyframes app-rise-sm { from { opacity: 0; transform: translateY(10px); } }
+@keyframes app-reveal { from { opacity: 0; transform: translateY(28px); } }
+@keyframes app-page-in { from { opacity: 0; transform: translateY(8px); } }
+@keyframes app-spin { to { transform: rotate(360deg); } }
+@keyframes app-counter { from { rotate: calc(var(--a) * -1); } to { rotate: calc(-360deg - var(--a)); } }
+@keyframes app-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+@keyframes app-drift { from { translate: 0 0; scale: 1; } to { translate: 8% 10%; scale: 1.18; } }
+@keyframes app-halo { from { scale: 0.92; opacity: 0.4; } to { scale: 2.2; opacity: 0; } }
+@keyframes app-swing { from { rotate: -7deg; } to { rotate: 7deg; } }
+@keyframes app-fill { from { transform: scaleX(0.18); } to { transform: scaleX(0.92); } }
+@keyframes app-twinkle { 0%, 100% { opacity: 0; scale: 0.4; } 50% { opacity: 0.7; scale: 1.5; } }
+@keyframes app-glow { from { opacity: 0.7; } to { opacity: 1; } }
+@keyframes app-flow { to { background-position: 8px 0; } }
+@keyframes app-tag-hang { 0% { transform: rotate(-18deg); } 35% { transform: rotate(9deg); } 60% { transform: rotate(-4deg); } 80% { transform: rotate(2deg); } 100% { transform: rotate(0); } }
+@keyframes app-tag-idle { 0%, 14%, 100% { transform: rotate(0); } 3% { transform: rotate(-7deg); } 6% { transform: rotate(5deg); } 9% { transform: rotate(-3deg); } 12% { transform: rotate(1deg); } }
+@keyframes app-ring-pulse { 0%, 70%, 100% { transform: scale(1); } 85% { transform: scale(1.22); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .app-art *, svg.ek-logo *, .app-landing__glow, .app-step::after { animation: none !important; }
+  .app-art__chip { rotate: calc(var(--a) * -1); }
+  .app-art__fill { transform: scaleX(0.6); }
+  .app-art__spark { opacity: 0.4; }
+  [data-reveal] { opacity: 1; }
+  .ek-pocket:hover, .ek-request:hover, .app-step:hover { transform: none; }
+}
+
+/* ------------------------------------------------------------------ responsive fixes */
+/* The 88px rail is narrower than a short address: stack it and let it wrap. */
+@media (min-width: 600px) and (max-width: 1023.98px) {
+  .ek-sidenav__foot .ek-address { flex-direction: column; gap: 0; text-align: center; }
+  .ek-sidenav__foot .ek-address__label { margin: 0; }
+  .ek-sidenav__foot .ek-address__value { max-width: 8ch; overflow-wrap: anywhere; }
+}
+
+/* Activity rows in a narrow column (phones, the 336px side column): amount and status drop under the title. */
+.ek-activitylist { container-type: inline-size; }
+@container (max-width: 380px) {
+  .ek-activity { grid-template-columns: 40px minmax(0, 1fr) auto; align-items: start; row-gap: var(--space-1); }
+  .ek-activity__icon { grid-row: 1 / span 2; }
+  .ek-activity__main { grid-column: 2; }
+  .ek-activity__side { grid-column: 2; grid-row: 2; display: flex; flex-wrap: wrap; align-items: center; justify-items: start; gap: var(--space-2); }
+  .ek-activity__link, .ek-activity__spacer { grid-column: 3; grid-row: 1 / span 2; align-self: center; }
+}
+
+/* The public pocket page reads as one centred column at every width. */
+.app-topbar--narrow, .ek-page.app-narrow { max-width: calc(var(--size-reading-max) + var(--space-16)); }

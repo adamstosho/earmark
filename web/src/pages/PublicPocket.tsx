@@ -28,13 +28,13 @@ export function PublicPocket({ id }: { id: bigint }) {
 
   return (
     <div className="app-landing">
-      <header className="app-topbar">
+      <header className="app-topbar app-topbar--narrow">
         <a href={paths.landing} aria-label={copy.pocket.goHome}>
           <Logo variant="wordmark" />
         </a>
         {address ? <Address label={copy.nav.you} value={address} /> : null}
       </header>
-      <main className="ek-page" id="ek-main">
+      <main className="ek-page app-narrow" id="ek-main">
         <div className="app-notices ek-stack">
           <Notice tone="info" icon="eye">
             {copy.publicPage.banner}

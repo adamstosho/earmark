@@ -123,7 +123,15 @@
 }
 
 /* Landing. */
-.app-landing { min-height: 100dvh; background: var(--canvas); }
+.app-landing { position: relative; min-height: 100dvh; background: var(--canvas); overflow-x: clip; }
+.app-landing > header, .app-landing > main { position: relative; z-index: 1; }
+.app-landing__glow {
+  position: absolute; inset: 0 0 auto 0; z-index: 0; height: min(92dvh, 760px); pointer-events: none;
+  background:
+    radial-gradient(55% 60% at 88% 0%, var(--brand-soft), transparent 72%),
+    radial-gradient(42% 46% at 0% 28%, var(--accent-soft), transparent 72%);
+  animation: app-glow 14s ease-in-out infinite alternate;
+}
 .app-landing__bar {
   display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
   max-width: var(--size-content-max); margin: 0 auto;
@@ -133,22 +141,46 @@
 .app-hero { display: grid; gap: var(--space-8); }
 .app-hero__copy { display: grid; gap: var(--space-5); align-content: start; }
 .app-hero__cta { display: grid; gap: var(--space-2); }
+.app-hero__visual { display: grid; align-content: center; min-width: 0; }
 .app-steps { display: grid; gap: var(--space-4); }
-.app-step { display: grid; grid-template-columns: auto 1fr; gap: var(--space-1) var(--space-4); align-items: start; }
-.app-step__num {
-  grid-row: span 2; display: grid; place-items: center; width: 36px; height: 36px; border-radius: var(--radius-full);
-  background: var(--brand-soft); color: var(--brand-text);
+.app-step {
+  position: relative; display: grid; grid-template-columns: auto 1fr; gap: var(--space-2) var(--space-4); align-content: start;
+  padding: var(--space-5); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);
+  transition: transform var(--ek-dur-slow) var(--ek-ease), box-shadow var(--ek-dur-slow) var(--ek-ease), border-color var(--ek-dur) var(--ek-ease);
 }
+.app-step__tile {
+  display: grid; place-items: center; width: 48px; height: 48px; border-radius: var(--radius-md);
+  background: var(--brand-soft); color: var(--brand-text);
+  transition: background-color var(--ek-dur) var(--ek-ease), color var(--ek-dur) var(--ek-ease);
+}
+.app-step__tile .ek-icon { transition: transform var(--ek-dur-slow) var(--ek-ease); }
+.app-step__num {
+  justify-self: end; align-self: start; display: grid; place-items: center; width: 28px; height: 28px; border-radius: var(--radius-full);
+  background: var(--surface-sunken); color: var(--ink-muted);
+}
+.app-step > h3, .app-step > p { grid-column: 1 / -1; }
+.app-step > h3 { margin-top: var(--space-2); }
 .app-landing__section { margin-top: var(--space-12); display: grid; gap: var(--space-5); }
 @media (min-width: 600px) {
   .app-landing__bar { padding-left: var(--space-6); padding-right: var(--space-6); }
   .app-hero__cta { grid-auto-flow: column; justify-content: start; align-items: center; }
-  .app-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .app-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
+  /* A dashed line of money flowing from one step to the next. */
+  .app-step:not(:last-child)::after {
+    content: ''; position: absolute; top: calc(var(--space-5) + 23px); left: 100%; width: var(--space-6); height: 2px;
+    background: repeating-linear-gradient(90deg, var(--line-strong) 0 4px, transparent 4px 8px); background-size: 8px 2px;
+    animation: app-flow 0.9s linear infinite;
+  }
 }
 @media (min-width: 1024px) {
   .app-landing__bar { padding: var(--space-8) var(--space-8) 0; }
   .app-hero { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); align-items: center; gap: var(--space-16); padding: var(--space-10) 0; }
   .app-landing__section { margin-top: var(--space-16); }
+}
+@media (hover: hover) {
+  .app-step:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: var(--brand-soft-hover); }
+  .app-step:hover .app-step__tile { background: var(--brand); color: var(--on-brand); }
+  .app-step:hover .app-step__tile .ek-icon { transform: scale(1.14) rotate(-8deg); }
 }
 
 /* The live pocket beside the landing headline. */
