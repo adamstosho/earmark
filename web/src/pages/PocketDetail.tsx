@@ -104,6 +104,7 @@ export function PocketDetail({ id }: { id: bigint }) {
             <PocketIcon icon={iconName(p.icon)} hue={hueName(p.hue)} size="lg" />
             <h1 className="ek-page__title is-people">{p.label}</h1>
           </div>
+          <IconButton icon="share-network" label={copy.pocket.share} variant="secondary" onClick={share} />
         </div>
 
         {!mine ? (

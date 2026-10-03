@@ -2,6 +2,7 @@
    .ek-type-* classes and the components. Breakpoints are the design system's 600px, 1024px and 1440px. */
 
 /* Keyboard focus for the app's own controls, matching the design system's ring. */
+.app-topbar a:focus-visible,
 .app-pick:focus-visible,
 .app-plain:focus-visible,
 .app-choice input:focus-visible + .app-choice__box {

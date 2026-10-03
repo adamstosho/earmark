@@ -16,10 +16,16 @@ function twoWallets({ account }) {
     on: () => {},
     removeListener: () => {},
   };
+  // Not authorised until the person connects, so the page does not auto-reconnect before the wallet choice appears.
+  let authorised = false;
   const metamask = {
     isMetaMask: true,
     request: async ({ method }) => {
-      if (method === 'eth_requestAccounts' || method === 'eth_accounts') return [account];
+      if (method === 'eth_requestAccounts') {
+        authorised = true;
+        return [account];
+      }
+      if (method === 'eth_accounts') return authorised ? [account] : [];
       if (method === 'eth_chainId') return '0x4cef52';
       if (method === 'wallet_requestPermissions' || method === 'wallet_getPermissions') return [{ parentCapability: 'eth_accounts' }];
       throw Object.assign(new Error('read-only test wallet'), { code: 4200 });
