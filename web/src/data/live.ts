@@ -39,6 +39,8 @@ export function useLive(): LiveState {
 }
 
 const POLL_MS = 2_000;
+/** While the RPC refuses calls (rate limit), wait longer between polls instead of adding to the load. */
+const MAX_BACKOFF_MS = 12_000;
 /** Start a little behind the head, so events between the first reads and the first poll are not missed. */
 const LOOKBACK = 120n;
 
@@ -50,9 +52,18 @@ export function useLivePoller(): void {
     let stopped = false;
     let busy = false;
     let lastSeen: bigint | null = null;
+    let delay = POLL_MS;
+    let timer: number | undefined;
+
+    const schedule = () => {
+      if (stopped) return;
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => void tick(), delay);
+    };
 
     const tick = async () => {
-      if (busy || stopped || document.visibilityState === 'hidden') return;
+      if (busy || stopped) return;
+      if (document.visibilityState === 'hidden') return schedule();
       busy = true;
       try {
         const latest = await withRetry(() => env.client.getBlockNumber({ cacheTime: 0 }), 2);
@@ -68,23 +79,28 @@ export function useLivePoller(): void {
           }
           lastSeen = latest;
         }
+        delay = POLL_MS;
         set({ lastOk: Date.now(), failing: false });
       } catch {
+        delay = Math.min(delay * 2, MAX_BACKOFF_MS);
         if (!state.failing) set({ failing: true });
       } finally {
         busy = false;
+        schedule();
       }
     };
 
     void tick();
-    const timer = window.setInterval(() => void tick(), POLL_MS);
     const onVisible = () => {
-      if (document.visibilityState === 'visible') void tick();
+      if (document.visibilityState === 'visible') {
+        delay = POLL_MS;
+        void tick();
+      }
     };
     document.addEventListener('visibilitychange', onVisible);
     return () => {
       stopped = true;
-      window.clearInterval(timer);
+      window.clearTimeout(timer);
       document.removeEventListener('visibilitychange', onVisible);
     };
   }, [env, queryClient]);

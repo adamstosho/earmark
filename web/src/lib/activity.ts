@@ -1,6 +1,6 @@
 import { formatLog, numberToHex, pad, parseEventLogs, type Address, type Hex, type RpcLog } from 'viem';
 import { earmarkAbi } from '../abi';
-import { sleep } from './rpc';
+import { sleep, withRetry } from './rpc';
 
 // The activity feed (PRD Section 8). No indexer and no range scans: each pocket's history is rebuilt by walking the
 // `prevEventBlock` pointers one block at a time, and new events arrive through a 2-second poll. Only Earmark's own
@@ -143,15 +143,51 @@ export async function pollRange(
   return mergeFeeds(out);
 }
 
-/** A LogSource over any EIP-1193-style request function (viem's `client.request`). */
+/** Arc's public RPC refuses bursts, so at most this many log reads are in flight at once. */
+const MAX_IN_FLIGHT = 3;
+
+/**
+ * A LogSource over any EIP-1193-style request function (viem's `client.request`). Arc's public RPC rate-limits by
+ * address (-32005), so reads queue three at a time, each is retried with backoff, identical reads share one call,
+ * and a block's logs are remembered: a block that held an event never changes, so moving between screens does not
+ * read it again.
+ */
 export function rpcLogSource(
   request: (args: { method: 'eth_getLogs'; params: [unknown] }) => Promise<unknown>,
   address: Address,
 ): LogSource {
-  const get = async (filter: Record<string, unknown>) => (await request({ method: 'eth_getLogs', params: [filter] })) as RpcLog[];
+  let running = 0;
+  const waiting: (() => void)[] = [];
+  const slot = async <T>(fn: () => Promise<T>): Promise<T> => {
+    if (running >= MAX_IN_FLIGHT) await new Promise<void>((resolve) => waiting.push(resolve));
+    running++;
+    try {
+      return await fn();
+    } finally {
+      running--;
+      waiting.shift()?.();
+    }
+  };
+  const get = (filter: Record<string, unknown>) =>
+    slot(() => withRetry(async () => (await request({ method: 'eth_getLogs', params: [filter] })) as RpcLog[], 6, 400));
+  const seen = new Map<string, RpcLog[]>();
+  const inFlight = new Map<string, Promise<RpcLog[]>>();
   return {
-    logsInBlock: (block, pocketId) =>
-      get({ address, fromBlock: numberToHex(block), toBlock: numberToHex(block), topics: [null, pocketTopic(pocketId)] }),
+    logsInBlock: async (block, pocketId) => {
+      const key = `${block}:${pocketId}`;
+      const known = seen.get(key);
+      if (known) return known;
+      const shared = inFlight.get(key);
+      if (shared) return shared;
+      const read = get({ address, fromBlock: numberToHex(block), toBlock: numberToHex(block), topics: [null, pocketTopic(pocketId)] })
+        .then((logs) => {
+          if (logs.length > 0) seen.set(key, logs);
+          return logs;
+        })
+        .finally(() => inFlight.delete(key));
+      inFlight.set(key, read);
+      return read;
+    },
     logsInRange: (from, to) => get({ address, fromBlock: numberToHex(from), toBlock: numberToHex(to) }),
   };
 }
