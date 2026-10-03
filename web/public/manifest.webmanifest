@@ -1,0 +1,14 @@
+{
+  "name": "Earmark",
+  "short_name": "Earmark",
+  "description": "Purpose-bound USDC pockets for money sent home, settled on Arc.",
+  "start_url": "/#/",
+  "display": "standalone",
+  "background_color": "#F9F6F2",
+  "theme_color": "#F9F6F2",
+  "icons": [
+    { "src": "/icons/earmark-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/earmark-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icons/earmark-app-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

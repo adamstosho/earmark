@@ -1,0 +1,59 @@
+<!-- @dsCard group="Screens" height=1216 width=1280 subtitle="Sender dashboard at 1280px: side navigation, pockets beside requests" page -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Added for offline viewing: tokens, fonts, styles, React 18 and the component bundle. -->
+<script>(function(){function t(){var m=/theme=(light|dark)/.exec(location.hash);var d=m?m[1]:(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',d);}t();addEventListener('hashchange',t);})();</script>
+<link rel="stylesheet" href="../../tokens.css">
+<link rel="stylesheet" href="../../gallery/fonts-embedded.css">
+<link rel="stylesheet" href="../bundle.css">
+<script src="../../gallery/vendor/react.production.min.js"></script>
+<script src="../../gallery/vendor/react-dom.production.min.js"></script>
+<script src="../bundle.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SenderDashboardScreen</title>
+<style>
+body{margin:0;padding:20px;background:var(--canvas);color:var(--ink)}
+.pv-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.pv-top{align-items:flex-start}.pv-gap-32{gap:32px}
+.pv-col{display:grid;gap:16px}.pv-center{justify-items:center}.pv-max{max-width:480px}
+.pv-grid2{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));align-items:start}
+.pv-grid3{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));align-items:start}
+.pv-lbl{font:600 12px/16px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-subtle)}
+.pv-sub{font-size:13px;line-height:18px;color:var(--ink-muted)}
+.pv-h48{height:48px}.pv-h24{height:24px}.pv-grow{flex:1;min-width:0}
+.pv-icons{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2px 8px}
+.pv-icon{display:flex;align-items:center;gap:10px;padding:6px 4px;color:var(--ink);font-size:12px;line-height:16px}
+.pv-icon span{color:var(--ink-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pv-field-like{display:grid;gap:6px}
+.pv-flush{margin:-20px}.pv-phone{min-height:110px}.pv-navdemo{min-height:420px}
+.pv-note{display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:18px;color:var(--ink-muted);padding:0 4px}
+.pv-note .ek-icon{margin-top:1px}
+.pv-screen{min-height:100dvh;display:flex;flex-direction:column}
+.pv-pay{flex:1;display:flex;flex-direction:column;gap:20px;padding:24px 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.pv-pay .ek-keypad{margin-top:auto}
+.pv-payee{display:flex;align-items:center;gap:12px;padding:12px 12px 12px 16px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-md)}
+body{padding:0}</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+var E = window.Earmark;
+function mount(el) {
+  ReactDOM.createRoot(document.getElementById("root")).render(el);
+}
+const NAV = [{ icon: "wallet", label: "Pockets", active: true }, { icon: "hand-coins", label: "Requests", badge: 2 }, { icon: "receipt", label: "Activity" }, { icon: "gear", label: "Settings" }];
+const X = "https://explorer.arc.io";
+const pockets = [
+  { label: "Food", icon: "bowl-food", hue: "palm", balance: 86, limit: 40, spent: 12, resetLabel: "Resets Monday", pending: 1 },
+  { label: "Ow\xF3 il\xE9-\xECw\xE9", icon: "graduation-cap", hue: "sky", balance: 250, limit: 0, payeeOnly: true, lockedUntil: "12 Dec", pending: 1 },
+  { label: "Rent", icon: "house-line", hue: "clay", balance: 180, limit: 0, payeeOnly: true },
+  { label: "Emergency", icon: "first-aid-kit", hue: "teal", balance: 62, limit: 30, spent: 26, resetLabel: "Resets Monday" }
+];
+const total = pockets.reduce((s, p) => s + p.balance, 0);
+mount(/* @__PURE__ */ React.createElement(E.AppShell, { nav: NAV, navFooter: /* @__PURE__ */ React.createElement(E.Address, { label: "You", value: "0x91b2c4d6e8f0a1b3c5d7e9f1a2b4c6d8e0f2a4b6" }) }, /* @__PURE__ */ React.createElement("div", { className: "ek-page" }, /* @__PURE__ */ React.createElement("div", { className: "ek-page__head" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", { className: "ek-page__eyebrow" }, "Across 4 pockets"), /* @__PURE__ */ React.createElement("h1", { className: "ek-page__title" }, "Your pockets"), /* @__PURE__ */ React.createElement("p", { className: "ek-page__lede ek-num" }, E.formatUSDC(total), " held for Mama, about ", E.formatNaira(total * 1500))), /* @__PURE__ */ React.createElement("div", { className: "pv-row" }, /* @__PURE__ */ React.createElement(E.Button, { variant: "secondary", iconStart: "share-network" }, "Share family link"), /* @__PURE__ */ React.createElement(E.Button, { variant: "primary", iconStart: "plus" }, "New pocket"))), /* @__PURE__ */ React.createElement("div", { className: "ek-split" }, /* @__PURE__ */ React.createElement("section", { className: "ek-section", "aria-labelledby": "pk" }, /* @__PURE__ */ React.createElement("div", { className: "ek-section__head" }, /* @__PURE__ */ React.createElement("h2", { className: "ek-section__title", id: "pk" }, "Pockets")), /* @__PURE__ */ React.createElement("div", { className: "ek-grid" }, pockets.map((p) => /* @__PURE__ */ React.createElement(E.PocketCard, { key: p.label, view: "sender", rate: 1500, ...p })))), /* @__PURE__ */ React.createElement("div", { className: "ek-split__lead" }, /* @__PURE__ */ React.createElement("section", { className: "ek-section", "aria-labelledby": "wt" }, /* @__PURE__ */ React.createElement("div", { className: "ek-section__head" }, /* @__PURE__ */ React.createElement("h2", { className: "ek-section__title", id: "wt" }, "Waiting for you"), /* @__PURE__ */ React.createElement(E.Badge, { tone: "caution" }, "2 requests")), /* @__PURE__ */ React.createElement(E.RequestCard, { pocketLabel: "Ow\xF3 il\xE9-\xECw\xE9", icon: "graduation-cap", hue: "sky", amount: 45, rate: 1500, memo: "Textbooks for second term", to: "0x3f2a9c1e5b7d4e8a9c217d4e5f6a8b90d1c29c1e", time: "12 min ago" }), /* @__PURE__ */ React.createElement(E.RequestCard, { pocketLabel: "Food", icon: "bowl-food", hue: "palm", amount: 18, rate: 1500, memo: "Rice and palm oil", to: "0x7a3c19e2b4f05d8e6c21a9b7f3e4d5c6b8a91f0e", time: "1 h ago" })), /* @__PURE__ */ React.createElement("section", { className: "ek-section", "aria-labelledby": "ac" }, /* @__PURE__ */ React.createElement("div", { className: "ek-section__head" }, /* @__PURE__ */ React.createElement("h2", { className: "ek-section__title", id: "ac" }, "Activity"), /* @__PURE__ */ React.createElement("a", { className: "ek-link", href: "#" }, "See all")), /* @__PURE__ */ React.createElement("div", { className: "ek-panel" }, /* @__PURE__ */ React.createElement(E.ActivityList, null, /* @__PURE__ */ React.createElement(E.ActivityItem, { kind: "spent", title: "Paid 0x3f2a\u20269c1e", detail: "Food", time: "2:14 pm", amount: 12.5, status: "Final", href: X }), /* @__PURE__ */ React.createElement(E.ActivityItem, { kind: "funded", title: "You added money", detail: "Food", time: "Mon 29 Sep", amount: 40, href: X }), /* @__PURE__ */ React.createElement(E.ActivityItem, { kind: "fee", title: "Fee credit", detail: "Emergency", time: "Sun 28 Sep", amount: 0.05, href: X })))))))));
+</script>
+<script>(function(){function s(){try{if(parent!==window)var b=document.body,cs=getComputedStyle(b);parent.postMessage({type:'ek-preview-height',h:Math.ceil(b.getBoundingClientRect().height+parseFloat(cs.marginTop)+parseFloat(cs.marginBottom))},'*');}catch(e){}}addEventListener('load',function(){s();setTimeout(s,400);});if(window.ResizeObserver)new ResizeObserver(s).observe(document.body);})();</script>
+</body>
+</html>

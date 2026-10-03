@@ -1,0 +1,189 @@
+/* Earmark design tokens. Generated from tokens.json; edit that file, not this one. */
+
+@font-face { font-family: 'Bricolage Grotesque'; src: url('/fonts/BricolageGrotesque-Variable.woff2') format('woff2'); font-weight: 200 800; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url('/fonts/Inter-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'IBM Plex Mono'; src: url('/fonts/IBMPlexMono-Regular.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'IBM Plex Mono'; src: url('/fonts/IBMPlexMono-Medium.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+  --canvas: #F9F6F2;
+  --surface: #FFFFFF;
+  --surface-raised: #FFFFFF;
+  --surface-sunken: #EFECE8;
+  --surface-inverse: #081437;
+  --line: #E0DCD6;
+  --line-strong: #87827C;
+  --ink: #1F1B16;
+  --ink-muted: #5A5650;
+  --ink-subtle: #6C6862;
+  --ink-inverse: #FFFFFF;
+  --brand: #1A3175;
+  --brand-hover: #102154;
+  --on-brand: #FFFFFF;
+  --brand-text: #254193;
+  --brand-soft: #E3EBFE;
+  --brand-soft-hover: #C8D9FE;
+  --focus-ring: #5074D2;
+  --accent: #AC4C29;
+  --on-accent: #FFFFFF;
+  --accent-text: #8B3B1D;
+  --accent-soft: #E8E3DC;
+  --positive: #006933;
+  --positive-soft: #D5F7DD;
+  --caution: #734F03;
+  --caution-soft: #FEEACB;
+  --negative: #9C202B;
+  --negative-soft: #FEE7E5;
+  --negative-solid: #C02D39;
+  --on-negative: #FFFFFF;
+  --scrim: rgba(8, 20, 55, 0.48);
+  --pocket-palm: #BE7C1C;
+  --pocket-palm-tint: #FDE9D4;
+  --pocket-palm-ink: #6F4502;
+  --pocket-sky: #2D95D3;
+  --pocket-sky-tint: #DCF0FF;
+  --pocket-sky-ink: #015580;
+  --pocket-clay: #CF6B58;
+  --pocket-clay-tint: #FEE7E2;
+  --pocket-clay-ink: #813426;
+  --pocket-teal: #079A94;
+  --pocket-teal-tint: #D3F5F2;
+  --pocket-teal-ink: #015C59;
+  --pocket-plum: #B66EB4;
+  --pocket-plum-tint: #FAE5F9;
+  --pocket-plum-ink: #6F376E;
+  --pocket-olive: #86962C;
+  --pocket-olive-tint: #EAF0D6;
+  --pocket-olive-ink: #4B5600;
+  --shadow-xs: 0 1px 2px #1F1B160F;
+  --shadow-sm: 0 1px 2px #1F1B160D, 0 2px 8px #1F1B1612;
+  --shadow-md: 0 2px 4px #1F1B160F, 0 10px 24px #0814371A;
+  --shadow-lg: 0 8px 16px #0814371A, 0 24px 56px #08143729;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --canvas: #0B0E18;
+  --surface: #131623;
+  --surface-raised: #1C202E;
+  --surface-sunken: #060810;
+  --surface-inverse: #F2F0EC;
+  --line: #292D3B;
+  --line-strong: #6F7484;
+  --ink: #F2F0EC;
+  --ink-muted: #B9BDCA;
+  --ink-subtle: #9B9FAD;
+  --ink-inverse: #081437;
+  --brand: #A1BDFC;
+  --brand-hover: #C8D9FE;
+  --on-brand: #081437;
+  --brand-text: #A1BDFC;
+  --brand-soft: #1B253F;
+  --brand-soft-hover: #232F4C;
+  --focus-ring: #7598EC;
+  --accent: #F4B59F;
+  --on-accent: #330F03;
+  --accent-text: #F4B59F;
+  --accent-soft: #2E2722;
+  --positive: #9CD6AB;
+  --positive-soft: #112D1A;
+  --caution: #E3C08A;
+  --caution-soft: #342305;
+  --negative: #FFADA9;
+  --negative-soft: #3B1C1B;
+  --negative-solid: #FFADA9;
+  --on-negative: #390509;
+  --scrim: rgba(0, 0, 0, 0.64);
+  --pocket-palm: #D49648;
+  --pocket-palm-tint: #3E290F;
+  --pocket-palm-ink: #F7C790;
+  --pocket-sky: #55AEE8;
+  --pocket-sky-tint: #133144;
+  --pocket-sky-ink: #A4D8FE;
+  --pocket-clay: #E68774;
+  --pocket-clay-tint: #44241E;
+  --pocket-clay-ink: #FFBFB2;
+  --pocket-teal: #1DBCB5;
+  --pocket-teal-tint: #033633;
+  --pocket-teal-ink: #87E4DE;
+  --pocket-plum: #CD89CB;
+  --pocket-plum-tint: #3B243A;
+  --pocket-plum-ink: #F2BCEF;
+  --pocket-olive: #9EAF52;
+  --pocket-olive-tint: #2C3112;
+  --pocket-olive-ink: #CBDA96;
+  --shadow-xs: 0 1px 2px #00000052;
+  --shadow-sm: 0 1px 2px #00000066;
+  --shadow-md: 0 4px 16px #00000080;
+  --shadow-lg: 0 16px 48px #000000A3;
+}
+
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 9999px;
+  --size-icon-sm: 16px;
+  --size-icon: 20px;
+  --size-icon-lg: 24px;
+  --size-control-sm: 36px;
+  --size-control-md: 44px;
+  --size-control-lg: 52px;
+  --size-tap-min: 44px;
+  --size-keypad-key: 56px;
+  --size-appbar: 56px;
+  --size-tabbar: 64px;
+  --size-rail: 88px;
+  --size-sidenav: 256px;
+  --size-sheet-max: 560px;
+  --size-reading-max: 680px;
+  --size-content-max: 1120px;
+  --bp-medium: 600px;
+  --bp-expanded: 1024px;
+  --bp-wide: 1440px;
+  --z-sticky: 10;
+  --z-nav: 20;
+  --z-sheet: 40;
+  --z-toast: 50;
+  --opacity-disabled: 0.45;
+  --font-display: "Bricolage Grotesque", "Inter", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+/* Type styles: one class per style in tokens.json. Display styles use Bricolage Grotesque,
+   which is subset to English, currency and number glyphs: never use them for words people wrote. */
+.ek-type-display-xl { font-family: var(--font-display); font-size: 48px; line-height: 52px; font-weight: 700; letter-spacing: -0.025em; }
+.ek-type-display-lg { font-family: var(--font-display); font-size: 36px; line-height: 40px; font-weight: 700; letter-spacing: -0.02em; }
+.ek-type-heading-xl { font-family: var(--font-display); font-size: 28px; line-height: 34px; font-weight: 650; letter-spacing: -0.015em; }
+.ek-type-heading-lg { font-family: var(--font-display); font-size: 22px; line-height: 28px; font-weight: 650; letter-spacing: -0.01em; }
+.ek-type-heading-md { font-family: var(--font-sans); font-size: 18px; line-height: 24px; font-weight: 600; letter-spacing: -0.005em; }
+.ek-type-heading-sm { font-family: var(--font-sans); font-size: 16px; line-height: 22px; font-weight: 600; }
+.ek-type-body-lg { font-family: var(--font-sans); font-size: 17px; line-height: 26px; font-weight: 400; }
+.ek-type-body { font-family: var(--font-sans); font-size: 16px; line-height: 24px; font-weight: 400; }
+.ek-type-body-sm { font-family: var(--font-sans); font-size: 14px; line-height: 20px; font-weight: 400; }
+.ek-type-label { font-family: var(--font-sans); font-size: 15px; line-height: 20px; font-weight: 550; letter-spacing: 0.003em; }
+.ek-type-label-sm { font-family: var(--font-sans); font-size: 13px; line-height: 18px; font-weight: 550; letter-spacing: 0.005em; }
+.ek-type-caption { font-family: var(--font-sans); font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.01em; }
+.ek-type-overline { font-family: var(--font-sans); font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.ek-type-amount-hero { font-family: var(--font-display); font-size: 44px; line-height: 48px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.ek-type-amount-lg { font-family: var(--font-display); font-size: 30px; line-height: 36px; font-weight: 700; letter-spacing: -0.015em; font-variant-numeric: tabular-nums; }
+.ek-type-amount-md { font-family: var(--font-sans); font-size: 17px; line-height: 24px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.ek-type-amount-sm { font-family: var(--font-sans); font-size: 14px; line-height: 20px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.ek-type-mono { font-family: var(--font-mono); font-size: 13px; line-height: 20px; font-weight: 400; }
+.ek-type-mono-sm { font-family: var(--font-mono); font-size: 12px; line-height: 16px; font-weight: 500; }

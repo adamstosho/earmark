@@ -1,0 +1,50 @@
+<!-- @dsCard group="Money" height=104 subtitle="Status always carries a word, often an icon" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Added for offline viewing: tokens, fonts, styles, React 18 and the component bundle. -->
+<script>(function(){function t(){var m=/theme=(light|dark)/.exec(location.hash);var d=m?m[1]:(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',d);}t();addEventListener('hashchange',t);})();</script>
+<link rel="stylesheet" href="../../tokens.css">
+<link rel="stylesheet" href="../../gallery/fonts-embedded.css">
+<link rel="stylesheet" href="../bundle.css">
+<script src="../../gallery/vendor/react.production.min.js"></script>
+<script src="../../gallery/vendor/react-dom.production.min.js"></script>
+<script src="../bundle.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Badge</title>
+<style>
+body{margin:0;padding:20px;background:var(--canvas);color:var(--ink)}
+.pv-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.pv-top{align-items:flex-start}.pv-gap-32{gap:32px}
+.pv-col{display:grid;gap:16px}.pv-center{justify-items:center}.pv-max{max-width:480px}
+.pv-grid2{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));align-items:start}
+.pv-grid3{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));align-items:start}
+.pv-lbl{font:600 12px/16px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-subtle)}
+.pv-sub{font-size:13px;line-height:18px;color:var(--ink-muted)}
+.pv-h48{height:48px}.pv-h24{height:24px}.pv-grow{flex:1;min-width:0}
+.pv-icons{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2px 8px}
+.pv-icon{display:flex;align-items:center;gap:10px;padding:6px 4px;color:var(--ink);font-size:12px;line-height:16px}
+.pv-icon span{color:var(--ink-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pv-field-like{display:grid;gap:6px}
+.pv-flush{margin:-20px}.pv-phone{min-height:110px}.pv-navdemo{min-height:420px}
+.pv-note{display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:18px;color:var(--ink-muted);padding:0 4px}
+.pv-note .ek-icon{margin-top:1px}
+.pv-screen{min-height:100dvh;display:flex;flex-direction:column}
+.pv-pay{flex:1;display:flex;flex-direction:column;gap:20px;padding:24px 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.pv-pay .ek-keypad{margin-top:auto}
+.pv-payee{display:flex;align-items:center;gap:12px;padding:12px 12px 12px 16px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-md)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+var E = window.Earmark;
+function mount(el) {
+  ReactDOM.createRoot(document.getElementById("root")).render(el);
+}
+mount(/* @__PURE__ */ React.createElement("div", { className: "pv-row" }, /* @__PURE__ */ React.createElement(E.Badge, { tone: "positive" }, "Final"), /* @__PURE__ */ React.createElement(E.Badge, { tone: "caution" }, "Pending"), /* @__PURE__ */ React.createElement(E.Badge, { tone: "negative" }, "Declined"), /* @__PURE__ */ React.createElement(E.Badge, { tone: "accent" }, "Locked until 12 Dec"), /* @__PURE__ */ React.createElement(E.Badge, { tone: "neutral", icon: "users-three" }, "Approved payees only"), /* @__PURE__ */ React.createElement(E.Badge, { tone: "brand" }, "New")));
+</script>
+<script>(function(){function s(){try{if(parent!==window)var b=document.body,cs=getComputedStyle(b);parent.postMessage({type:'ek-preview-height',h:Math.ceil(b.getBoundingClientRect().height+parseFloat(cs.marginTop)+parseFloat(cs.marginBottom))},'*');}catch(e){}}addEventListener('load',function(){s();setTimeout(s,400);});if(window.ResizeObserver)new ResizeObserver(s).observe(document.body);})();</script>
+</body>
+</html>

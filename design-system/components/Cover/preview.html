@@ -1,0 +1,68 @@
+<!-- @dsCard height=288 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Added for offline viewing: tokens, fonts, styles, React 18 and the component bundle. -->
+<script>(function(){function t(){var m=/theme=(light|dark)/.exec(location.hash);var d=m?m[1]:(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',d);}t();addEventListener('hashchange',t);})();</script>
+<link rel="stylesheet" href="../../tokens.css">
+<link rel="stylesheet" href="../../gallery/fonts-embedded.css">
+<link rel="stylesheet" href="../bundle.css">
+<script src="../../gallery/vendor/react.production.min.js"></script>
+<script src="../../gallery/vendor/react-dom.production.min.js"></script>
+<script src="../bundle.js"></script>
+<title>Earmark</title>
+<style>
+  html, body { margin: 0; height: 100%; }
+  body { background: var(--canvas); color: var(--ink); font-family: var(--font-sans); overflow: hidden; }
+  .cover { position: relative; height: 288px; overflow: hidden; }
+  .art { position: absolute; top: 0; left: 480px; width: 480px; height: 288px; overflow: hidden; }
+  .art svg { display: block; width: 480px; height: 288px; }
+  .brand { fill: var(--brand); }
+  .ink { fill: var(--ink); }
+  .palm { fill: var(--pocket-palm); }
+  .accent { fill: var(--accent); }
+  .blk { rx: var(--radius-lg); }
+  .ring { fill: none; stroke: var(--canvas); stroke-width: 3; }
+  .dot { fill: var(--canvas); }
+  .eye { fill: var(--canvas); }
+  .words { position: absolute; left: var(--space-6); bottom: var(--space-6); max-width: 440px; }
+  .name { margin: 0; font-family: var(--font-display); font-size: 104px; line-height: 0.92; font-weight: 700; letter-spacing: -0.03em; color: var(--ink); }
+  .tag { margin: var(--space-3) 0 0 4px; font-size: 14px; line-height: 20px; color: var(--ink-muted); }
+</style>
+</head>
+<body>
+<div class="cover">
+<div class="art" aria-hidden="true">
+<svg viewBox="0 0 480 288" width="480" height="288">
+<!--
+  blocks      brand 208x272 slab bled off the top (adire indigo, the identity) . pocket-palm 112x136 . ink 112x144 bled off the right edge . accent 48px disc (camwood, the eyelet) . about 34% of 960x288
+  arrangement one tall indigo slab with satellites, bottoms on one line space-8 above the edge, space-4 gutters
+  pattern     adire oniko tied rings: canvas-coloured 10px rings on a space-8 pitch cut into the indigo slab, every other ring with its tie dot, the way resist circles show pale on dyed cloth; chosen because the README names adire as the source of the palette and the radius scale
+  scales      sides in space-8 multiples; gutters space-4; ring pitch space-8; corners radius-lg; the disc is radius-full on 48px
+-->
+<rect class="brand blk" x="16" y="-16" width="208" height="272" rx="20"/>
+<rect class="palm blk" x="240" y="120" width="112" height="136" rx="20"/>
+<rect class="ink blk" x="368" y="48" width="128" height="144" rx="20"/>
+<circle class="accent" cx="392" cy="232" r="24"/>
+<circle class="eye" cx="392" cy="232" r="9"/>
+<circle class="ring" cx="56" cy="24" r="10"/><circle class="ring" cx="88" cy="24" r="10"/><circle class="ring" cx="120" cy="24" r="10"/><circle class="ring" cx="152" cy="24" r="10"/><circle class="ring" cx="184" cy="24" r="10"/>
+<circle class="ring" cx="56" cy="56" r="10"/><circle class="ring" cx="88" cy="56" r="10"/><circle class="ring" cx="120" cy="56" r="10"/><circle class="ring" cx="152" cy="56" r="10"/><circle class="ring" cx="184" cy="56" r="10"/>
+<circle class="ring" cx="56" cy="88" r="10"/><circle class="ring" cx="88" cy="88" r="10"/><circle class="ring" cx="120" cy="88" r="10"/><circle class="ring" cx="152" cy="88" r="10"/><circle class="ring" cx="184" cy="88" r="10"/>
+<circle class="ring" cx="56" cy="120" r="10"/><circle class="ring" cx="88" cy="120" r="10"/><circle class="ring" cx="120" cy="120" r="10"/><circle class="ring" cx="152" cy="120" r="10"/><circle class="ring" cx="184" cy="120" r="10"/>
+<circle class="ring" cx="56" cy="152" r="10"/><circle class="ring" cx="88" cy="152" r="10"/><circle class="ring" cx="120" cy="152" r="10"/><circle class="ring" cx="152" cy="152" r="10"/><circle class="ring" cx="184" cy="152" r="10"/>
+<circle class="dot" cx="56" cy="24" r="3"/><circle class="dot" cx="120" cy="24" r="3"/><circle class="dot" cx="184" cy="24" r="3"/>
+<circle class="dot" cx="88" cy="56" r="3"/><circle class="dot" cx="152" cy="56" r="3"/>
+<circle class="dot" cx="56" cy="88" r="3"/><circle class="dot" cx="120" cy="88" r="3"/><circle class="dot" cx="184" cy="88" r="3"/>
+<circle class="dot" cx="88" cy="120" r="3"/><circle class="dot" cx="152" cy="120" r="3"/>
+<circle class="dot" cx="56" cy="152" r="3"/><circle class="dot" cx="120" cy="152" r="3"/><circle class="dot" cx="184" cy="152" r="3"/>
+</svg>
+</div>
+<div class="words">
+<h1 class="name">Earmark</h1>
+<p class="tag">Money sent home, with a purpose.</p>
+</div>
+</div>
+<script>(function(){function s(){try{if(parent!==window)var b=document.body,cs=getComputedStyle(b);parent.postMessage({type:'ek-preview-height',h:Math.ceil(b.getBoundingClientRect().height+parseFloat(cs.marginTop)+parseFloat(cs.marginBottom))},'*');}catch(e){}}addEventListener('load',function(){s();setTimeout(s,400);});if(window.ResizeObserver)new ResizeObserver(s).observe(document.body);})();</script>
+</body>
+</html>

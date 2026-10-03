@@ -1,0 +1,1685 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Earmark design system</title>
+<meta name="description" content="The Earmark design system: tokens, type, colour, guidelines and React components, viewable offline.">
+<link rel="icon" href="assets/Logos/earmark-mark.svg" type="image/svg+xml">
+<script>(function(){var s=null;try{s=localStorage.getItem('ek-gallery-theme')}catch(e){}var d=s?s==='dark':(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-theme',d?'dark':'light');})();</script>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="gallery/fonts-embedded.css">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--canvas);color:var(--ink);font-family:var(--font-sans);font-size:16px;line-height:24px;-webkit-font-smoothing:antialiased}
+a{color:var(--brand-text);text-underline-offset:3px;text-decoration-thickness:1px}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}
+code,pre{font-family:var(--font-mono)}
+.g-sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.g-muted{color:var(--ink-muted)}
+.g-num{font-variant-numeric:tabular-nums}
+.g-skip{position:absolute;left:12px;top:-60px;z-index:60;padding:10px 16px;border-radius:var(--radius-full);background:var(--brand);color:var(--on-brand);font-weight:600;text-decoration:none}
+.g-skip:focus{top:12px}
+
+/* Shell */
+.g-app{display:grid;grid-template-columns:272px minmax(0,1fr);grid-template-rows:64px auto;min-height:100dvh}
+.g-top{grid-column:1/-1;position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:12px;padding:0 20px 0 24px;background:var(--surface);border-bottom:1px solid var(--line)}
+.g-brand{display:flex;align-items:center;gap:12px;color:inherit;text-decoration:none;border-radius:var(--radius-sm)}
+.g-brand svg{display:block}
+.g-brand__tag{font-size:12px;line-height:16px;font-weight:600;color:var(--brand-text);background:var(--brand-soft);padding:3px 10px;border-radius:var(--radius-full);white-space:nowrap}
+.g-menu{display:none;width:44px;height:44px;margin-left:-10px;align-items:center;justify-content:center;border:0;border-radius:var(--radius-full);background:transparent;color:var(--ink);cursor:pointer}
+.g-menu:hover{background:var(--surface-sunken)}
+.g-theme{margin-left:auto;display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px 0 12px;border:1px solid var(--line-strong);border-radius:var(--radius-full);background:var(--surface);color:var(--ink);font:600 14px/20px var(--font-sans);cursor:pointer}
+.g-theme:hover{background:var(--surface-sunken)}
+.g-theme__sun{display:none}
+[data-theme="dark"] .g-theme__sun{display:block}
+[data-theme="dark"] .g-theme__moon{display:none}
+
+.g-nav{position:sticky;top:64px;height:calc(100dvh - 64px);overflow-y:auto;padding:20px 16px 32px;border-right:1px solid var(--line);background:var(--canvas);overscroll-behavior:contain}
+.g-nav ul{list-style:none;margin:0;padding:0}
+.g-nav__sup{margin:28px 12px 0;font-size:12px;line-height:16px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-subtle)}
+.g-nav__group{margin-top:16px}
+.g-nav__group:first-child{margin-top:0}
+.g-nav__head{margin:0 12px 4px;font-size:13px;line-height:18px;font-weight:600;color:var(--ink-muted)}
+.g-nav a{display:block;padding:7px 12px;border-radius:var(--radius-sm);color:var(--ink);font-size:15px;line-height:22px;text-decoration:none}
+.g-nav a:hover{background:var(--surface-sunken)}
+.g-nav a[aria-current="page"]{background:var(--brand-soft);color:var(--brand-text);font-weight:600}
+.g-nav__foot{margin:32px 12px 0;font-size:12px;line-height:16px;color:var(--ink-subtle)}
+.g-scrim{position:fixed;inset:0;z-index:39;background:var(--scrim)}
+
+.g-main{min-width:0;padding:40px 48px 96px;outline:none}
+.g-main>*{max-width:1040px}
+
+/* Page head */
+.g-head{margin-bottom:32px}
+.g-eyebrow{margin:0 0 8px;font-size:12px;line-height:16px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--brand-text)}
+.g-head h1{margin:0;font-family:var(--font-display);font-size:40px;line-height:44px;font-weight:700;letter-spacing:-.02em}
+.g-lede{margin:12px 0 0;max-width:680px;font-size:17px;line-height:26px;color:var(--ink-muted)}
+
+/* Prose */
+.g-body h2{margin:48px 0 12px;font-family:var(--font-display);font-size:24px;line-height:30px;font-weight:650;letter-spacing:-.01em}
+.g-body h3{margin:32px 0 8px;font-size:18px;line-height:24px;font-weight:600}
+.g-body p,.g-body li{max-width:72ch}
+.g-body p{margin:0 0 14px}
+.g-body ul,.g-body ol{margin:0 0 16px;padding-left:1.35em}
+.g-body li{margin:6px 0}
+.g-body li>p{margin:0}
+.g-body strong{font-weight:600}
+.g-body code{font-size:.86em;padding:1px 6px;border-radius:var(--radius-xs);background:var(--surface-sunken);word-break:break-word}
+.g-body pre{margin:0 0 20px;padding:16px 18px;border-radius:var(--radius-md);background:var(--surface-sunken);border:1px solid var(--line);overflow-x:auto;font-size:13px;line-height:20px}
+.g-body pre code{padding:0;background:none;font-size:inherit;word-break:normal}
+.g-note{color:var(--ink-muted)}
+.g-check{display:inline-block;width:16px;height:16px;margin-right:8px;vertical-align:-3px;border:1.5px solid var(--line-strong);border-radius:5px}
+.g-body ul:has(.g-check){list-style:none;padding-left:0}
+.g-table{margin:0 0 24px;border:1px solid var(--line);border-radius:var(--radius-md);overflow-x:auto;background:var(--surface)}
+.g-table table{width:100%;border-collapse:collapse;font-size:14px;line-height:20px}
+.g-table th{padding:10px 14px;text-align:left;font-weight:600;color:var(--ink-muted);background:var(--surface-sunken);white-space:nowrap}
+.g-table td{padding:10px 14px;border-top:1px solid var(--line);vertical-align:top}
+.g-table td code{white-space:nowrap}
+
+/* Preview stage */
+.g-stage{margin:0 0 32px}
+.g-stage__frame{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--surface-sunken)}
+.g-stage iframe{display:block;width:100%;border:0;margin:0 auto;background:var(--canvas);transform-origin:0 0}
+.g-stage figcaption{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;margin-top:8px;font-size:13px;line-height:18px;color:var(--ink-muted)}
+
+/* Colour */
+.g-colours{border-top:1px solid var(--line)}
+.g-colours__head,.g-colour{display:grid;grid-template-columns:minmax(160px,1.1fr) 168px 168px minmax(0,2fr);gap:12px 20px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.g-colours__head{padding:8px 0;font-size:13px;line-height:18px;font-weight:600;color:var(--ink-muted)}
+.g-colour__name{font-size:13px;font-weight:500;padding:0!important;background:none!important}
+.g-colour__val{display:flex;align-items:center;gap:10px}
+.g-colour__val code{padding:0!important;background:none!important;font-size:12px!important;color:var(--ink-muted)}
+.g-colour__use{font-size:14px;line-height:20px;color:var(--ink-muted)}
+.g-colour__th{display:none;font-size:12px;line-height:16px;font-weight:600;color:var(--ink-subtle);width:32px}
+.g-sw{flex:none;width:32px;height:32px;border-radius:var(--radius-sm);box-shadow:inset 0 0 0 1px rgba(127,127,127,.35)}
+.g-hues{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;margin-bottom:20px}
+.g-hue p{margin:10px 0 0;font-size:14px;line-height:20px}
+.g-hue__row{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden}
+.g-hue__theme{padding:16px}
+.g-hue__disc{display:grid;place-items:center;width:44px;height:44px;border-radius:var(--radius-full);font-weight:600;font-size:15px}
+.g-hue__bar{display:block;height:8px;margin-top:14px;border-radius:var(--radius-full)}
+
+/* Type */
+.g-fams{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:8px}
+.g-fam{padding:20px;border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--surface)}
+.g-fam p{margin:0}
+.g-fam__sample{font-size:24px;line-height:32px;margin-bottom:16px!important;overflow-wrap:anywhere}
+.g-fam p+p{font-size:14px;line-height:22px}
+.g-specs{border-top:1px solid var(--line)}
+.g-spec{display:grid;grid-template-columns:240px minmax(0,1fr);gap:4px 24px;padding:20px 0;border-bottom:1px solid var(--line)}
+.g-spec__meta{grid-row:span 2;display:flex;flex-direction:column;gap:4px;font-size:13px;line-height:18px;color:var(--ink-muted)}
+.g-spec__meta code{align-self:flex-start;color:var(--ink)}
+.g-spec__sample{margin:0!important;max-width:none!important;overflow-wrap:anywhere}
+.g-spec__use{margin:6px 0 0!important;font-size:14px;line-height:20px;color:var(--ink-muted)}
+
+/* Space and shape */
+.g-spaces{border-top:1px solid var(--line)}
+.g-space{display:grid;grid-template-columns:120px 56px 96px minmax(0,1fr);gap:8px 16px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;line-height:20px}
+.g-space code{padding:0!important;background:none!important;font-size:13px!important}
+.g-space__bar{display:block;height:16px;border-radius:4px;background:var(--brand)}
+.g-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:12px}
+.g-tile{display:flex;flex-direction:column;gap:4px;padding:16px;border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--surface);font-size:13px;line-height:18px}
+.g-tile code{align-self:flex-start}
+.g-tile__box{display:block;width:88px;height:64px;margin-bottom:12px;background:var(--brand-soft);border:2px solid var(--brand)}
+.g-tile--shadow{background:var(--canvas)}
+.g-tile__box--shadow{border:0;border-radius:var(--radius-md);background:var(--surface-raised);margin:8px 0 18px 8px}
+.g-files{columns:2 260px}
+.g-files li{break-inside:avoid}
+
+/* Pager */
+.g-pager{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:64px;padding-top:24px;border-top:1px solid var(--line)}
+.g-pager a{display:flex;flex-direction:column;gap:2px;padding:14px 18px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--surface);color:var(--ink);text-decoration:none}
+.g-pager a:hover{border-color:var(--line-strong)}
+.g-pager span{font-size:13px;line-height:18px;color:var(--ink-muted)}
+.g-pager strong{font-weight:600;color:var(--brand-text)}
+.g-pager .g-pager__next{grid-column:2;text-align:right}
+
+@media (max-width:1100px){
+  .g-colours__head{display:none}
+  .g-colour{grid-template-columns:1fr 1fr;padding:14px 0}
+  .g-colour__name,.g-colour__use{grid-column:1/-1}
+  .g-colour__th{display:block}
+}
+@media (max-width:959px){
+  .g-app{grid-template-columns:minmax(0,1fr);grid-template-rows:56px auto}
+  .g-top{padding:0 12px 0 16px}
+  .g-menu{display:inline-flex}
+  .g-nav{position:fixed;top:0;bottom:0;left:0;z-index:40;width:min(320px,86vw);height:100dvh;padding-top:24px;background:var(--surface-raised);border-right:0;box-shadow:var(--shadow-lg);transform:translateX(-105%);visibility:hidden;transition:transform var(--g-dur,240ms) cubic-bezier(.2,0,0,1),visibility 0s linear var(--g-dur,240ms)}
+  .g-app.is-open .g-nav{transform:none;visibility:visible;transition:transform var(--g-dur,240ms) cubic-bezier(.2,0,0,1)}
+  .g-main{padding:28px 16px 72px}
+  .g-head h1{font-size:30px;line-height:36px}
+  .g-spec{grid-template-columns:minmax(0,1fr)}
+  .g-spec__meta{grid-row:auto;flex-direction:row;flex-wrap:wrap;gap:4px 12px;margin-bottom:8px}
+  .g-space{grid-template-columns:auto 1fr;}
+  .g-space__bar{grid-column:1/-1}
+  .g-space .g-muted{grid-column:1/-1}
+}
+@media (max-width:520px){
+  .g-brand__tag{display:none}
+  .g-theme{padding:0 12px}
+  .g-pager{grid-template-columns:1fr}
+  .g-pager .g-pager__next{grid-column:1}
+}
+@media (prefers-reduced-motion:reduce){ .g-nav{--g-dur:0ms} }
+
+</style>
+</head>
+<body>
+<a class="g-skip" href="#main">Skip to content</a>
+<div class="g-app">
+<header class="g-top">
+<button class="g-menu" type="button" aria-expanded="false" aria-controls="g-nav"><svg viewBox="0 0 256 256" width="22" height="22" fill="currentColor" aria-hidden="true" focusable="false"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"/></svg><span class="g-sr">Menu</span></button>
+<a class="g-brand" href="#/overview" aria-label="Earmark design system, overview"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 188 48" width="118" height="30" aria-hidden="true" focusable="false"><g transform="scale(0.75)"><path style="fill:var(--brand)" fill-rule="evenodd" d="M26 14H48A8 8 0 0 1 56 22V42A8 8 0 0 1 48 50H26Q23 50 21 48L8.5 35.5Q5 32 8.5 28.5L21 16Q23 14 26 14ZM19 25.5A6.5 6.5 0 1 0 19 38.5A6.5 6.5 0 1 0 19 25.5Z"/><path style="fill:var(--accent)" fill-rule="evenodd" d="M19 25.5A6.5 6.5 0 1 0 19 38.5A6.5 6.5 0 1 0 19 25.5ZM19 28.4A3.6 3.6 0 1 1 19 35.6A3.6 3.6 0 1 1 19 28.4Z"/></g><path style="fill:var(--ink)" transform="translate(58 35) scale(0.0340)" d="M284.999755859375 13.83331298828125Q213.50018310546875 13.83331298828125 164.08364868164062 -7.083282470703125Q114.6671142578125 -27.9998779296875 83.6671142578125 -64.91647338867188Q52.6671142578125 -101.83306884765625 38.583709716796875 -149.999755859375Q24.50030517578125 -198.16644287109375 24.50030517578125 -252.83331298828125Q24.50030517578125 -309.83331298828125 39.083648681640625 -361.4165954589844Q53.6669921875 -412.9998779296875 84.00030517578125 -452.9164733886719Q114.3336181640625 -492.83306884765625 161.91683959960938 -515.9163513183594Q209.50006103515625 -538.9996337890625 275.49981689453125 -538.9996337890625Q340.16607666015625 -538.9996337890625 387.0825500488281 -516.6664428710938Q433.9990234375 -494.333251953125 462.7489929199219 -454.0834655761719Q491.49896240234375 -413.83367919921875 500.99908447265625 -360.16717529296875Q510.49920654296875 -306.50067138671875 500.9993896484375 -243.16741943359375L114.332275390625 -237.000732421875V-318.49993896484375L391.33447265625 -323.6666259765625L370.6678466796875 -276.50042724609375Q375.667724609375 -323.3338623046875 366.66754150390625 -356.1673583984375Q357.6673583984375 -389.0008544921875 335.4170837402344 -406.5009765625Q313.16680908203125 -424.0010986328125 275.49981689453125 -424.0010986328125Q235.49945068359375 -424.0010986328125 210.665771484375 -403.5842590332031Q185.83209228515625 -383.16741943359375 174.91519165039062 -346.2504577636719Q163.998291015625 -309.33349609375 163.998291015625 -259.66650390625Q163.998291015625 -175.49945068359375 194.58206176757812 -135.24905395507812Q225.16583251953125 -94.9986572265625 286.49981689453125 -94.9986572265625Q314.3336181640625 -94.9986572265625 332.83392333984375 -102.58218383789062Q351.334228515625 -110.16571044921875 362.5843811035156 -123.74929809570312Q373.83453369140625 -137.3328857421875 378.2512512207031 -155.33306884765625Q382.66796875 -173.333251953125 381.50128173828125 -193.9998779296875L513.9993896484375 -186.333251953125Q516.3326416015625 -150.9996337890625 505.66583251953125 -115.74960327148438Q494.9990234375 -80.49957275390625 468.4156188964844 -51.3330078125Q441.83221435546875 -22.16644287109375 396.66571044921875 -4.16656494140625Q351.49920654296875 13.83331298828125 284.999755859375 13.83331298828125Z M709.5000610351562 13.83331298828125Q669.3333740234375 13.83331298828125 633.7500915527344 -0.3333740234375Q598.1668090820312 -14.50006103515625 575.7502136230469 -45.916717529296875Q553.3336181640625 -77.3333740234375 553.3336181640625 -129.49993896484375Q553.3336181640625 -177.49981689453125 571.8335571289062 -207.58309936523438Q590.33349609375 -237.6663818359375 621.9167785644531 -256.0830383300781Q653.5000610351562 -274.49969482421875 691.8334350585938 -284.1663818359375Q730.1668090820312 -293.83306884765625 769.0003662109375 -300.83306884765625Q822.1671752929688 -310.6663818359375 848.5005493164062 -316.5830383300781Q874.8339233398438 -322.49969482421875 884.0838928222656 -330.7497253417969Q893.3338623046875 -338.999755859375 893.3338623046875 -353.66650390625Q893.3338623046875 -387.6671142578125 869.0835266113281 -405.50079345703125Q844.8331909179688 -423.33447265625 806.4994506835938 -423.33447265625Q782.6658935546875 -423.33447265625 758.9990234375 -414.50103759765625Q735.3321533203125 -405.6676025390625 719.9153137207031 -383.9174499511719Q704.4984741210938 -362.16729736328125 704.4983520507812 -323.00048828125L575.33349609375 -333.50054931640625Q574.8336791992188 -393.6668701171875 595.5836486816406 -433.5833435058594Q616.3336181640625 -473.49981689453125 651.4167785644531 -496.4164123535156Q686.4999389648438 -519.3330078125 728.1663818359375 -529.1663208007812Q769.8328247070312 -538.9996337890625 811.1659545898438 -538.9996337890625Q885.1653442382812 -538.9996337890625 934.7485046386719 -511.33319091796875Q984.3316650390625 -483.666748046875 1009.2483825683594 -430.7503967285156Q1034.1651000976562 -377.83404541015625 1034.1651000976562 -301.16766357421875V-206.16754150390625Q1034.331787109375 -172.000732421875 1034.4151306152344 -137.33392333984375Q1034.4984741210938 -102.6671142578125 1034.5818176269531 -68.41696166992188Q1034.6651611328125 -34.16680908203125 1034.6651611328125 0.0H908.33349609375Q909.1669311523438 -38.3336181640625 909.8336791992188 -76.91714477539062Q910.5004272460938 -115.50067138671875 911.1671752929688 -158.16754150390625H904.6671142578125Q899.8336791992188 -110.83392333984375 873.9169616699219 -71.75039672851562Q848.000244140625 -32.6668701171875 806.0835266113281 -9.416778564453125Q764.1668090820312 13.83331298828125 709.5000610351562 13.83331298828125ZM765.998779296875 -93.49871826171875Q786.4992065429688 -93.49871826171875 808.5828552246094 -101.58224487304688Q830.66650390625 -109.665771484375 849.8333740234375 -127.16607666015625Q869.000244140625 -144.6663818359375 881.0003662109375 -173.41665649414062Q893.00048828125 -202.16693115234375 893.3338623046875 -242.6671142578125L893.5005493164062 -266.333740234375L920.3338623046875 -270.667236328125Q911.5004272460938 -257.00048828125 891.4169006347656 -248.91714477539062Q871.3333740234375 -240.83380126953125 846.0830993652344 -236.25045776367188Q820.8328247070312 -231.6671142578125 795.0825500488281 -226.91708374023438Q769.332275390625 -222.16705322265625 747.33203125 -213.8336181640625Q725.331787109375 -205.50018310546875 711.6649780273438 -191.33331298828125Q697.9981689453125 -177.16644287109375 697.9981689453125 -152.332763671875Q697.9981689453125 -124.16583251953125 717.2482604980469 -108.832275390625Q736.4983520507812 -93.49871826171875 765.998779296875 -93.49871826171875Z M1105.6669921875 0.0V-276.49871826171875L1105.3336181640625 -524.9996337890625H1231.4985961914062L1227.8314819335938 -307.49871826171875H1236.1648559570312Q1242.1648559570312 -392.3321533203125 1260.0815734863281 -442.5823669433594Q1277.998291015625 -492.83258056640625 1305.6651000976562 -514.832763671875Q1333.3319091796875 -536.8329467773438 1368.1654663085938 -536.8329467773438Q1385.33203125 -536.8329467773438 1403.9152526855469 -532.2496643066406Q1422.4984741210938 -527.6663818359375 1440.6650390625 -517.66650390625L1433.1651000976562 -358.50238037109375Q1412.665283203125 -370.16888427734375 1392.998779296875 -375.7521057128906Q1373.332275390625 -381.3353271484375 1355.665771484375 -381.3353271484375Q1321.66552734375 -381.3353271484375 1297.9153137207031 -360.3349609375Q1274.1651000976562 -339.3345947265625 1261.6649780273438 -298.667236328125Q1249.1648559570312 -257.9998779296875 1249.1648559570312 -199.83221435546875V0.0Z M1491.8336791992188 0.0V-277.3314208984375L1491.3336181640625 -524.9996337890625H1615.33203125L1611.6649169921875 -302.6654052734375H1619.998291015625Q1626.998291015625 -388.16558837890625 1647.5816345214844 -439.9158020019531Q1668.1649780273438 -491.666015625 1702.9983520507812 -515.3328247070312Q1737.8317260742188 -538.9996337890625 1786.6651611328125 -538.9996337890625Q1837.3319091796875 -538.9996337890625 1868.4985961914062 -513.5828552246094Q1899.665283203125 -488.16607666015625 1914.1652221679688 -435.99920654296875Q1928.6651611328125 -383.83233642578125 1926.4983520507812 -302.6654052734375H1934.8317260742188Q1941.4983520507812 -387.16558837890625 1963.2483215332031 -438.9158020019531Q1984.998291015625 -490.666015625 2021.2483215332031 -514.8328247070312Q2057.4983520507812 -538.9996337890625 2107.8318481445312 -538.9996337890625Q2148.6651611328125 -538.9996337890625 2178.6651611328125 -523.9996337890625Q2208.6651611328125 -508.9996337890625 2229.081817626953 -478.9162902832031Q2249.4984741210938 -448.83294677734375 2259.4984741210938 -403.2496032714844Q2269.4984741210938 -357.666259765625 2269.4984741210938 -296.49957275390625V0.0H2125.0006103515625V-282.666259765625Q2125.0006103515625 -326.16693115234375 2117.750518798828 -354.833984375Q2110.5004272460938 -383.50103759765625 2095.750213623047 -397.4178771972656Q2081.0 -411.334716796875 2057.9996337890625 -411.334716796875Q2027.3323974609375 -411.334716796875 2003.0821228027344 -385.167724609375Q1978.8318481445312 -359.000732421875 1964.7484436035156 -308.0835876464844Q1950.6650390625 -257.16644287109375 1950.6650390625 -181.3326416015625V0.0H1809.6671142578125V-287.16632080078125Q1809.6671142578125 -329.83355712890625 1802.3336791992188 -357.0839538574219Q1795.000244140625 -384.3343505859375 1779.9167175292969 -397.83453369140625Q1764.8331909179688 -411.334716796875 1741.99951171875 -411.334716796875Q1712.6656494140625 -411.334716796875 1688.83203125 -387.8343505859375Q1664.9984130859375 -364.333984375 1650.5816345214844 -313.4168395996094Q1636.1648559570312 -262.49969482421875 1636.1648559570312 -181.3326416015625V0.0Z M2479.5000610351562 13.83331298828125Q2439.3333740234375 13.83331298828125 2403.7500915527344 -0.3333740234375Q2368.1668090820312 -14.50006103515625 2345.750213623047 -45.916717529296875Q2323.3336181640625 -77.3333740234375 2323.3336181640625 -129.49993896484375Q2323.3336181640625 -177.49981689453125 2341.8335571289062 -207.58309936523438Q2360.33349609375 -237.6663818359375 2391.916778564453 -256.0830383300781Q2423.5000610351562 -274.49969482421875 2461.8334350585938 -284.1663818359375Q2500.1668090820312 -293.83306884765625 2539.0003662109375 -300.83306884765625Q2592.1671752929688 -310.6663818359375 2618.5005493164062 -316.5830383300781Q2644.8339233398438 -322.49969482421875 2654.0838928222656 -330.7497253417969Q2663.3338623046875 -338.999755859375 2663.3338623046875 -353.66650390625Q2663.3338623046875 -387.6671142578125 2639.083526611328 -405.50079345703125Q2614.8331909179688 -423.33447265625 2576.4994506835938 -423.33447265625Q2552.6658935546875 -423.33447265625 2528.9990234375 -414.50103759765625Q2505.3321533203125 -405.6676025390625 2489.915313720703 -383.9174499511719Q2474.4984741210938 -362.16729736328125 2474.4983520507812 -323.00048828125L2345.33349609375 -333.50054931640625Q2344.8336791992188 -393.6668701171875 2365.5836486816406 -433.5833435058594Q2386.3336181640625 -473.49981689453125 2421.416778564453 -496.4164123535156Q2456.4999389648438 -519.3330078125 2498.1663818359375 -529.1663208007812Q2539.8328247070312 -538.9996337890625 2581.1659545898438 -538.9996337890625Q2655.1653442382812 -538.9996337890625 2704.748504638672 -511.33319091796875Q2754.3316650390625 -483.666748046875 2779.2483825683594 -430.7503967285156Q2804.1651000976562 -377.83404541015625 2804.1651000976562 -301.16766357421875V-206.16754150390625Q2804.331787109375 -172.000732421875 2804.4151306152344 -137.33392333984375Q2804.4984741210938 -102.6671142578125 2804.581817626953 -68.41696166992188Q2804.6651611328125 -34.16680908203125 2804.6651611328125 0.0H2678.33349609375Q2679.1669311523438 -38.3336181640625 2679.8336791992188 -76.91714477539062Q2680.5004272460938 -115.50067138671875 2681.1671752929688 -158.16754150390625H2674.6671142578125Q2669.8336791992188 -110.83392333984375 2643.916961669922 -71.75039672851562Q2618.000244140625 -32.6668701171875 2576.083526611328 -9.416778564453125Q2534.1668090820312 13.83331298828125 2479.5000610351562 13.83331298828125ZM2535.998779296875 -93.49871826171875Q2556.4992065429688 -93.49871826171875 2578.5828552246094 -101.58224487304688Q2600.66650390625 -109.665771484375 2619.8333740234375 -127.16607666015625Q2639.000244140625 -144.6663818359375 2651.0003662109375 -173.41665649414062Q2663.00048828125 -202.16693115234375 2663.3338623046875 -242.6671142578125L2663.5005493164062 -266.333740234375L2690.3338623046875 -270.667236328125Q2681.5004272460938 -257.00048828125 2661.4169006347656 -248.91714477539062Q2641.3333740234375 -240.83380126953125 2616.0830993652344 -236.25045776367188Q2590.8328247070312 -231.6671142578125 2565.082550048828 -226.91708374023438Q2539.332275390625 -222.16705322265625 2517.33203125 -213.8336181640625Q2495.331787109375 -205.50018310546875 2481.6649780273438 -191.33331298828125Q2467.9981689453125 -177.16644287109375 2467.9981689453125 -152.332763671875Q2467.9981689453125 -124.16583251953125 2487.248260498047 -108.832275390625Q2506.4983520507812 -93.49871826171875 2535.998779296875 -93.49871826171875Z M2875.6669921875 0.0V-276.49871826171875L2875.3336181640625 -524.9996337890625H3001.4985961914062L2997.8314819335938 -307.49871826171875H3006.1648559570312Q3012.1648559570312 -392.3321533203125 3030.081573486328 -442.5823669433594Q3047.998291015625 -492.83258056640625 3075.6651000976562 -514.832763671875Q3103.3319091796875 -536.8329467773438 3138.1654663085938 -536.8329467773438Q3155.33203125 -536.8329467773438 3173.915252685547 -532.2496643066406Q3192.4984741210938 -527.6663818359375 3210.6650390625 -517.66650390625L3203.1651000976562 -358.50238037109375Q3182.665283203125 -370.16888427734375 3162.998779296875 -375.7521057128906Q3143.332275390625 -381.3353271484375 3125.665771484375 -381.3353271484375Q3091.66552734375 -381.3353271484375 3067.915313720703 -360.3349609375Q3044.1651000976562 -339.3345947265625 3031.6649780273438 -298.667236328125Q3019.1648559570312 -257.9998779296875 3019.1648559570312 -199.83221435546875V0.0Z M3261.6669921875 0.0V-694.9993896484375H3402.6649169921875V-322.6658935546875Q3439.3319091796875 -339.49908447265625 3467.4990234375 -362.9991455078125Q3495.6661376953125 -386.49920654296875 3516.1665649414062 -414.0826721191406Q3536.6669921875 -441.6661376953125 3549.417266845703 -470.166259765625Q3562.1675415039062 -498.6663818359375 3568.66748046875 -525.3330078125H3733.4982299804688Q3723.1649780273438 -486.83319091796875 3702.248260498047 -449.66656494140625Q3681.33154296875 -412.49993896484375 3650.3314208984375 -379.66656494140625Q3619.331298828125 -346.83319091796875 3578.914520263672 -320.7498474121094Q3538.4977416992188 -294.66650390625 3489.9976806640625 -278.333251953125V-270.333251953125Q3552.4977416992188 -279.16644287109375 3592.6644897460938 -270.8330078125Q3632.8312377929688 -262.49957275390625 3656.4146423339844 -241.49951171875Q3679.998046875 -220.49945068359375 3692.8314208984375 -189.6661376953125Q3705.664794921875 -158.83282470703125 3712.9981689453125 -121.83294677734375L3736.998291015625 0.0H3581.1672973632812L3569.1671752929688 -85.999755859375Q3564.0003662109375 -121.33349609375 3554.5000610351562 -150.41696166992188Q3544.999755859375 -179.50042724609375 3521.1659545898438 -197.1671142578125Q3497.3321533203125 -214.83380126953125 3448.9981689453125 -215.00048828125L3402.6649169921875 -215.16717529296875V0.0Z"/></svg><span class="g-brand__tag">Design system</span></a>
+<button class="g-theme" type="button" aria-pressed="false"><svg class="g-theme__moon" viewBox="0 0 256 256" width="20" height="20" fill="currentColor" aria-hidden="true" focusable="false"><path d="M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.84,104.84,0,0,0-52.91,37A104,104,0,0,0,136,224a103.09,103.09,0,0,0,62.52-20.88,104.84,104.84,0,0,0,37-52.91A8,8,0,0,0,233.54,142.23ZM188.9,190.34A88,88,0,0,1,65.66,67.11a89,89,0,0,1,31.4-26A106,106,0,0,0,96,56,104.11,104.11,0,0,0,200,160a106,106,0,0,0,14.92-1.06A89,89,0,0,1,188.9,190.34Z"/></svg><svg class="g-theme__sun" viewBox="0 0 256 256" width="20" height="20" fill="currentColor" aria-hidden="true" focusable="false"><path d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"/></svg><span class="g-theme__label">Dark</span></button>
+</header>
+<nav class="g-nav" id="g-nav" aria-label="Design system">
+<div class="g-nav__group"><p class="g-nav__head">Start</p><ul><li><a href="#/overview" data-page="overview">Overview</a></li><li><a href="#/getting-started" data-page="getting-started">Getting started</a></li></ul></div><div class="g-nav__group"><p class="g-nav__head">Foundations</p><ul><li><a href="#/colour" data-page="colour">Colour</a></li><li><a href="#/typography" data-page="typography">Typography</a></li><li><a href="#/space" data-page="space">Space and shape</a></li><li><a href="#/icons" data-page="icons">Iconography</a></li><li><a href="#/logo" data-page="logo">Logo</a></li></ul></div><div class="g-nav__group"><p class="g-nav__head">Guidelines</p><ul><li><a href="#/content" data-page="content">Content and voice</a></li><li><a href="#/responsive" data-page="responsive">Layout and responsiveness</a></li><li><a href="#/patterns" data-page="patterns">Screen patterns</a></li><li><a href="#/accessibility" data-page="accessibility">Accessibility</a></li><li><a href="#/implementation" data-page="implementation">Implementation</a></li></ul></div><p class="g-nav__sup">Components</p><div class="g-nav__group"><p class="g-nav__head">Actions</p><ul><li><a href="#/Button" data-page="Button">Button</a></li><li><a href="#/IconButton" data-page="IconButton">IconButton</a></li></ul></div><div class="g-nav__group"><p class="g-nav__head">Inputs</p><ul><li><a href="#/AmountInput" data-page="AmountInput">AmountInput</a></li><li><a href="#/Keypad" data-page="Keypad">Keypad</a></li><li><a href="#/SegmentedControl" data-page="SegmentedControl">SegmentedControl</a></li><li><a href="#/Switch" data-page="Switch">Switch</a></li><li><a href="#/TextField" data-page="TextField">TextField</a></li></ul></div><div class="g-nav__group"><p class="g-nav__head">Money</p><ul><li><a href="#/Address" data-page="Address">Address</a></li><li><a href="#/AllowanceMeter" data-page="AllowanceMeter">AllowanceMeter</a></li><li><a href="#/Badge" data-page="Badge">Badge</a></li><li><a href="#/Money" data-page="Money">Money</a></li><li><a href="#/PocketIcon" data-page="PocketIcon">PocketIcon</a></li></ul></div><div class="g-nav__group"><p class="g-nav__head">Pockets</p><ul><li><a href="#/ActivityItem" data-page="ActivityItem">ActivityItem</a></li><li><a href="#/PocketCard" data-page="PocketCard">PocketCard</a></li><li><a href="#/RequestCard" data-page="RequestCard">RequestCard</a></li><li><a href="#/TxStatus" data-page="TxStatus">TxStatus</a></li></ul></div><div class="g-nav__group"><p class="g-nav__head">Feedback</p><ul><li><a href="#/EmptyState" data-page="EmptyState">EmptyState</a></li><li><a href="#/Notice" data-page="Notice">Notice</a></li><li><a href="#/Skeleton" data-page="Skeleton">Skeleton</a></li><li><a href="#/Toast" data-page="Toast">Toast</a></li></ul></div><div class="g-nav__group"><p class="g-nav__head">Overlays</p><ul><li><a href="#/Sheet" data-page="Sheet">Sheet</a></li></ul></div><div class="g-nav__group"><p class="g-nav__head">Navigation</p><ul><li><a href="#/AppBar" data-page="AppBar">AppBar</a></li><li><a href="#/AppShell" data-page="AppShell">AppShell</a></li><li><a href="#/SideNav" data-page="SideNav">SideNav</a></li><li><a href="#/TabBar" data-page="TabBar">TabBar</a></li></ul></div><div class="g-nav__group"><p class="g-nav__head">Screens</p><ul><li><a href="#/FamilyHomeScreen" data-page="FamilyHomeScreen">Family home, phone</a></li><li><a href="#/PayScreen" data-page="PayScreen">Pay, phone</a></li><li><a href="#/SenderDashboardPhoneScreen" data-page="SenderDashboardPhoneScreen">Sender dashboard, phone</a></li><li><a href="#/SenderDashboardScreen" data-page="SenderDashboardScreen">Sender dashboard, desktop</a></li></ul></div>
+<p class="g-nav__foot">Version 1.0 · 28 September 2026</p>
+</nav>
+<div class="g-scrim" hidden></div>
+<main class="g-main" id="main" tabindex="-1"></main>
+</div>
+<template id="p-overview"><header class="g-head"><p class="g-eyebrow">Start</p><h1>Earmark design system</h1><p class="g-lede">Purpose-bound USDC pockets for families, on Arc. Version 1.0, 28 September 2026.</p></header><div class="g-body"><figure class="g-stage" data-w="960" data-h="288"><div class="g-stage__frame"><iframe title="Cover preview" loading="lazy" data-src="components/Cover/preview.html" style="height:288px"></iframe></div></figure><p>Earmark lets people abroad fund labelled USDC pockets on Arc (school fees, food, rent, emergency) that family members spend under rules the sender sets. This system serves two very different people at once: a sender who is used to banking apps, and a family member in Nigeria who may be new to both crypto and small screens. Every rule below comes back to that pair.</p>
+<p>The look comes from <strong>adire</strong>, the Yoruba indigo resist-dyed cotton: indigo on unbleached cotton, with <strong>camwood</strong> (osun), the Yoruba red-brown dye, kept for one meaning only. It is a quiet, local reference that no other fintech uses, and it keeps the interface calm where money is concerned.</p>
+<h2>Principles</h2>
+<ol>
+<li><strong>Money reads first.</strong> Balances and amounts are the largest thing on any screen, in tabular numerals, with the naira equivalent under them.</li>
+<li><strong>Plain words, no chain talk.</strong> Say "network fee", "receipt" and "Final", never "gas", "transaction hash" or "confirmed on-chain" (the word list is in Content and voice).</li>
+<li><strong>One primary action per view.</strong> Indigo <code>brand</code> fills one button. Repeated actions in lists are <code>tonal</code>.</li>
+<li><strong>Final means final.</strong> Show every state honestly, from the wallet prompt to Final, and say plainly that payments cannot be reversed.</li>
+<li><strong>Calm by default.</strong> Colour signals only change of state. Spending is not an error, so money out is <code>ink</code>, not red.</li>
+<li><strong>Built for a mid-range Android on patchy data.</strong> 360px wide, 16px text, 44px targets, no decorative images, fonts subset to what is needed.</li>
+</ol>
+<h2>Colour</h2>
+<p>Use the semantic tokens, never raw hex. Both themes are defined for every token, and every text pair named in a token's usage note meets WCAG AA (4.5:1) in both.</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Tokens</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Grounds</td>
+<td><code>canvas</code>, <code>surface</code>, <code>surface-raised</code>, <code>surface-sunken</code></td>
+<td><code>canvas</code> for the page, <code>surface</code> for cards and bars, <code>surface-raised</code> for sheets and menus, <code>surface-sunken</code> for wells and tracks.</td>
+</tr>
+<tr>
+<td>Text</td>
+<td><code>ink</code>, <code>ink-muted</code>, <code>ink-subtle</code></td>
+<td>Three levels only. <code>ink-subtle</code> is for timestamps and placeholders, never for anything a person must read to act.</td>
+</tr>
+<tr>
+<td>Lines</td>
+<td><code>line</code>, <code>line-strong</code></td>
+<td><code>line</code> for dividers. <code>line-strong</code> for every control boundary (inputs, switches, secondary buttons), which keeps them at 3:1.</td>
+</tr>
+<tr>
+<td>Brand (adire indigo)</td>
+<td><code>brand</code>, <code>brand-hover</code>, <code>on-brand</code>, <code>brand-text</code>, <code>brand-soft</code>, <code>brand-soft-hover</code></td>
+<td>One filled <code>brand</code> control per view. <code>brand-text</code> for links and active navigation. <code>brand-soft</code> for selection and info.</td>
+</tr>
+<tr>
+<td>Accent (camwood)</td>
+<td><code>accent</code>, <code>on-accent</code>, <code>accent-text</code>, <code>accent-soft</code></td>
+<td>Only for commitment locks and the eyelet in the logo. Never for errors, never for primary actions.</td>
+</tr>
+<tr>
+<td>Status</td>
+<td><code>positive</code>, <code>caution</code>, <code>negative</code> with <code>-soft</code> fills; <code>negative-solid</code>, <code>on-negative</code></td>
+<td>Always paired with a word and usually an icon. Green is money in and Final; ochre is pending or nearly used; crimson is failure.</td>
+</tr>
+<tr>
+<td>Pockets</td>
+<td><code>pocket-&lt;hue&gt;</code>, <code>pocket-&lt;hue&gt;-tint</code>, <code>pocket-&lt;hue&gt;-ink</code> for palm, sky, clay, teal, plum, olive</td>
+<td>Identify pockets only: the icon disc (tint and ink) and the allowance meter fill (the solid). Never as status colours.</td>
+</tr>
+<tr>
+<td>Focus</td>
+<td><code>focus-ring</code></td>
+<td>A solid 2px ring, 2px outside the control, at least 3:1 on every ground in both themes.</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>On a <code>brand</code> fill use <code>on-brand</code>, which is white in light and deep indigo in dark. Never hard-code white.</li>
+<li>The dark theme is indigo night (<code>canvas</code> #0B0E18), not grey. Surfaces step up in lightness (<code>surface</code>, then <code>surface-raised</code>) instead of relying on shadows.</li>
+<li>Follow the device setting by default and offer a manual switch in Settings (see Implementation).</li>
+</ul>
+<h2>Typography</h2>
+<p>Three families, each with a job. The pairing was chosen after testing 65 open-source families for the naira sign and every letter of Yoruba, Igbo and Hausa: only Inter and Noto Sans (with its mono cut) carry them all.</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Family</th>
+<th>Token</th>
+<th>Used for</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bricolage Grotesque</td>
+<td><code>--font-display</code></td>
+<td>Page titles, section titles, sheet titles, large amounts, keypad digits</td>
+<td>Designed by Mathieu Triay and added to Google Fonts in June 2023. Its designer describes it as trying "to express visually what it feels like to move countries and rebuild", which is exactly who sends money through Earmark. Variable weight, width and optical size, with ink traps at small sizes. It carries ₦, ẹ, ọ and the combining tone marks, but not ṣ or the Hausa hooked letters.</td>
+</tr>
+<tr>
+<td>Inter</td>
+<td><code>--font-sans</code></td>
+<td>All interface text, labels, body copy and everything people type</td>
+<td>Complete coverage of ₦, Yoruba (ẹ ọ ṣ with tone marks), Igbo (ị ụ ṅ) and Hausa (ɓ ɗ ƙ ƴ), tabular figures, and excellent rendering on Android.</td>
+</tr>
+<tr>
+<td>IBM Plex Mono</td>
+<td><code>--font-mono</code></td>
+<td>Addresses and receipt numbers only</td>
+<td>Distinguishes 0 from O and 1 from l when people compare characters.</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>Never set text that people wrote in the display face.</strong> Pocket names, sender names and memos are always Inter: "Ṣadé", "Owó ilé-ìwé", "Kuɗin makaranta" and "Ego ụlọ akwụkwọ" all render correctly there. The shipped Bricolage file only carries English, currency and number glyphs, so a title that contains someone's words (a pocket page titled with its name) adds <code>is-people</code> to <code>.ek-page__title</code> or <code>.ek-section__title</code>, and sheet titles are always Inter.</li>
+<li>Use the type styles, not ad hoc sizes: <code>display-xl</code> and <code>display-lg</code> on the landing page, <code>heading-xl</code> for page titles on phones, <code>heading-lg</code> for sections and sheets, <code>heading-md</code> for pocket names, <code>body</code> (16px) as the default, <code>body-sm</code> for secondary lines, <code>label</code> for buttons and form labels, <code>caption</code> (12px) as the floor.</li>
+<li>Amounts use <code>amount-hero</code>, <code>amount-lg</code>, <code>amount-md</code>, <code>amount-sm</code> and always tabular numerals (<code>.ek-num</code>).</li>
+<li><code>overline</code> is uppercase English product copy only. Never uppercase Yoruba or anything people typed: capitals lose the tone marks' clarity.</li>
+<li>Sentence case everywhere, including buttons and titles.</li>
+</ul>
+<h2>Space, shape and depth</h2>
+<ul>
+<li><strong>Spacing</strong> is a 4px scale: <code>space-1</code> (4) to <code>space-20</code> (80). Phone gutters are <code>space-4</code>; card padding is <code>space-4</code> on phones and <code>space-5</code> from 600px; sections are <code>space-8</code> apart.</li>
+<li><strong>Radius</strong> comes from the tied circles of adire oniko: buttons, badges, tabs and meters are full pills (<code>radius-full</code>); cards are <code>radius-lg</code> (20px); inputs and notices <code>radius-md</code> (14px); sheets and dialogs <code>radius-xl</code> (28px).</li>
+<li><strong>Elevation</strong> is light: <code>shadow-sm</code> on cards at rest, <code>shadow-md</code> on hover and floating bars, <code>shadow-lg</code> on sheets and toasts. Cards also carry a 1px <code>line</code> border so they hold their edge in bright sunlight.</li>
+<li>Do not use gradients, glass effects or coloured side borders on cards.</li>
+</ul>
+<h2>Motion</h2>
+<p>Motion confirms, it never decorates. Durations and easing are CSS custom properties in <code>bundle.css</code>: <code>--ek-dur-fast</code> (120ms) for hover and press, <code>--ek-dur</code> (200ms) for toggles, <code>--ek-dur-slow</code> (320ms) for sheets and meter fills, all on <code>--ek-ease</code> (cubic-bezier(0.2, 0, 0, 1)). With reduced motion on, transitions become instant, skeletons stop pulsing and spinners slow down but keep turning, because they carry meaning.</p>
+<h2>Iconography</h2>
+<ul>
+<li><strong>Phosphor Icons</strong>, Regular weight, 20px inside controls and rows, 24px in navigation, 16px in badges. The Fill weight marks the active tab and nothing else. The bundle carries the 64 icons the product needs; the full set is at phosphoricons.com under the MIT licence.</li>
+<li>Every pocket has an icon from the pocket set: graduation-cap, bowl-food, house-line, first-aid-kit, lightning, device-mobile, bus, shopping-bag, hand-heart, piggy-bank.</li>
+<li>No emoji in the interface.</li>
+</ul>
+<h2>Logo</h2>
+<p>The mark is a label tag with a camwood eyelet: money with a label on it. Use <code>Logo</code> in code, or the SVG files in the Logos asset group elsewhere. Keep clear space equal to the eyelet's diameter, never go below 24px for the mark, and write the name as "Earmark" in running text (the wordmark alone is lowercase).</p>
+<h2>Patterns borrowed, and from whom</h2>
+<p>Earmark takes proven patterns, not looks, from products its users already trust:</p>
+<ul>
+<li><strong>Named pots</strong> from Monzo, which lets people "split your savings into different Pots for different goals". Earmark's pocket is the same mental model, spent by someone else.</li>
+<li><strong>Commitment locks</strong> from PiggyVest's Safelock, which Nigerian savers know as funds set aside "without having access to it until maturity". The lock copy uses the same idea in plain words.</li>
+<li><strong>Staged status</strong> from Wise, which moves a transfer through named statuses until it is sent. <code>TxStatus</code> does the same for wallet, sending and Final.</li>
+<li><strong>Keypad amount entry</strong> from phone-first payment apps, so the amount is typed where the thumb already is.</li>
+</ul>
+<p>Visual identity (indigo on cotton, the tag mark, Bricolage headings) is Earmark's own.</p>
+<h2>Using this system</h2>
+<p>Tokens compile to CSS custom properties (<code>tokens.css</code>) with a light and a dark theme selected by <code>data-theme</code> on <code>html</code>. Components are React 18 function components on <code>window.Earmark</code>, styled by <code>components/bundle.css</code> with the <code>ek-</code> prefix. Read Layout and responsiveness before building screens, and Implementation before wiring the app.</p></div></template><template id="p-getting-started"><header class="g-head"><p class="g-eyebrow">Start</p><h1>Getting started</h1><p class="g-lede">What is in this folder, how to view it, and how to use it in the app.</p></header><div class="g-body"><p>This folder is the complete Earmark design system: the brand book, the tokens, the fonts, the logos and icons, the written guidelines, and 27 React components with a live preview of each. Everything works offline and everything in it is free to use.</p>
+<h2>View it</h2>
+<p>Open <code>index.html</code> in Chrome, Edge, Safari or Firefox. The gallery shows every foundation, guideline, component and screen, with live previews. Use the theme button at the top right to switch between light and dark.</p>
+<p>Each <code>components/&lt;Name&gt;/preview.html</code> also opens on its own and follows your device's light or dark setting.</p>
+<p>If a browser refuses to show the previews from your disk (some company-managed browsers block local files), serve the folder instead: run <code>npx serve .</code> inside it and open the address it prints.</p>
+<h2>What is inside</h2>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Path</th>
+<th>What it is</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>index.html</code></td>
+<td>The offline gallery. Start here.</td>
+</tr>
+<tr>
+<td><code>README.md</code></td>
+<td>The brand book: principles, colour, typography, space and shape, motion, icons, logo, and the patterns borrowed from other apps.</td>
+</tr>
+<tr>
+<td><code>tokens.json</code></td>
+<td>The source of truth for every token: colour in both themes, type, spacing, radius, shadow, size, breakpoints, z-index and opacity, each with a usage note.</td>
+</tr>
+<tr>
+<td><code>tokens.css</code></td>
+<td>The same tokens as CSS custom properties, with the <code>@font-face</code> rules and one class per type style.</td>
+</tr>
+<tr>
+<td><code>fonts/</code></td>
+<td>Inter, Bricolage Grotesque and IBM Plex Mono as WOFF2 files.</td>
+</tr>
+<tr>
+<td><code>licenses/</code></td>
+<td>The SIL Open Font License for each font, and the MIT licences for Phosphor Icons and React.</td>
+</tr>
+<tr>
+<td><code>guidelines/</code></td>
+<td>Content and voice, layout and responsiveness, screen patterns, accessibility, and implementation.</td>
+</tr>
+<tr>
+<td><code>components/bundle.js</code> and <code>bundle.css</code></td>
+<td>A ready-to-run build: every component on <code>window.Earmark</code>, styled with the <code>ek-</code> class prefix.</td>
+</tr>
+<tr>
+<td><code>components/src/</code></td>
+<td>The typed React source (<code>index.tsx</code>, <code>icons.json</code>, <code>logo.ts</code>) to copy into the app.</td>
+</tr>
+<tr>
+<td><code>components/index.d.ts</code></td>
+<td>Type definitions for every component and helper.</td>
+</tr>
+<tr>
+<td><code>components/&lt;Name&gt;/</code></td>
+<td>A README and a live preview for each component and each sample screen.</td>
+</tr>
+<tr>
+<td><code>assets/Logos/</code></td>
+<td>Seven SVG logos, plus PNG app icons at 180, 192 and 512 pixels.</td>
+</tr>
+<tr>
+<td><code>assets/Icons/</code></td>
+<td>The 64 Phosphor icons the product uses, as SVG.</td>
+</tr>
+<tr>
+<td><code>gallery/</code></td>
+<td>Files the offline gallery needs (the React 18 runtime and embedded fonts). The app does not need them.</td>
+</tr>
+</tbody>
+</table></div>
+<h2>Use it in the Earmark app</h2>
+<p>These steps match the PRD's stack (Vite, React and TypeScript). <code>guidelines/50-implementation.md</code> gives the full detail.</p>
+<ol>
+<li>Copy <code>tokens.css</code> to <code>web/src/styles/tokens.css</code>, then change the four font URLs from <code>fonts/</code> to <code>/fonts/</code>.</li>
+<li>Copy the <code>.woff2</code> files and the <code>licenses</code> folder to <code>web/public/fonts/</code>.</li>
+<li>Copy <code>components/bundle.css</code> to <code>web/src/styles/earmark.css</code>.</li>
+<li>Copy <code>components/src/</code> to <code>web/src/ds/</code> and replace its first lines with normal imports, as the implementation guide shows.</li>
+<li>In <code>main.tsx</code>, import <code>tokens.css</code>, then <code>earmark.css</code>, then your own styles.</li>
+<li>Add the theme script from the implementation guide to <code>index.html</code>, so the right theme is set before the first paint.</li>
+<li>Copy <code>assets/Logos/earmark-mark.svg</code> and the PNG app icons to <code>web/public/icons/</code> for the favicon and the web app manifest.</li>
+</ol>
+<h2>Type style classes</h2>
+<p>For text outside a component, use the type style classes in <code>tokens.css</code> rather than setting sizes by hand:</p>
+<pre><code class="language-html">&lt;h1 class=&quot;ek-type-heading-xl&quot;&gt;Your pockets&lt;/h1&gt;
+&lt;p class=&quot;ek-type-body-sm&quot;&gt;Resets every Monday.&lt;/p&gt;
+&lt;span class=&quot;ek-type-amount-lg&quot;&gt;$240.00&lt;/span&gt;
+</code></pre>
+<p>There is one class for each of the 19 styles, from <code>.ek-type-display-xl</code> to <code>.ek-type-mono-sm</code>. The four display styles and the two large amount styles use Bricolage Grotesque, which is subset to English, currency and number glyphs. Never use them for words people wrote, such as names, pocket labels or notes; use <code>heading-md</code> or a body style, which are set in Inter.</p>
+<h2>Building with an AI coding tool</h2>
+<p>Add this folder to the project and ask the tool to read <code>README.md</code>, <code>guidelines/50-implementation.md</code> and <code>components/index.d.ts</code> before it writes any screen. The review checklist at the end of the implementation guide is a good final check for each screen.</p>
+<h2>Licences</h2>
+<ul>
+<li>Inter, Bricolage Grotesque and IBM Plex Mono: SIL Open Font License 1.1. Keep the licence files with the fonts.</li>
+<li>Phosphor Icons: MIT licence.</li>
+<li>React 18 (used only by the offline gallery): MIT licence.</li>
+</ul></div></template><template id="p-colour"><header class="g-head"><p class="g-eyebrow">Foundations</p><h1>Colour</h1><p class="g-lede">Semantic colour roles for both themes. Use the role, never the hex value.</p></header><div class="g-body"><p class="g-note">Adire indigo on unbleached cotton, with camwood kept for commitment locks. Every text pair named in a usage note meets 4.5:1 and every control boundary 3:1, in both themes.</p><p>Swatches show both themes side by side, whatever theme the gallery is in. In code, always use the custom property, never the hex value.</p><h2>Grounds</h2><div class="g-colours"><div class="g-colours__head" aria-hidden="true"><span>Token</span><span>Light</span><span>Dark</span><span>Use</span></div><div class="g-colour"><code class="g-colour__name">--canvas</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#F9F6F2"></span><code>#F9F6F2</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#0B0E18"></span><code>#0B0E18</code></span><span class="g-colour__use">Page background behind everything. Unbleached cotton in light, indigo night in dark.</span></div><div class="g-colour"><code class="g-colour__name">--surface</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#FFFFFF"></span><code>#FFFFFF</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#131623"></span><code>#131623</code></span><span class="g-colour__use">Cards, pocket cards, list containers, the app bar and tab bar.</span></div><div class="g-colour"><code class="g-colour__name">--surface-raised</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#FFFFFF"></span><code>#FFFFFF</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#1C202E"></span><code>#1C202E</code></span><span class="g-colour__use">Sheets, dialogs, menus and toasts. In light it is separated by shadow-lg; in dark by its lighter tone.</span></div><div class="g-colour"><code class="g-colour__name">--surface-sunken</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#EFECE8"></span><code>#EFECE8</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#060810"></span><code>#060810</code></span><span class="g-colour__use">Wells: segmented control track, keypad background, skeleton blocks, code blocks.</span></div><div class="g-colour"><code class="g-colour__name">--surface-inverse</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#081437"></span><code>#081437</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#F2F0EC"></span><code>#F2F0EC</code></span><span class="g-colour__use">Toasts and the one dark band on the landing page. Text on it is ink-inverse.</span></div><div class="g-colour"><code class="g-colour__name">--scrim</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:rgba(8, 20, 55, 0.48)"></span><code>rgba(8, 20, 55, 0.48)</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:rgba(0, 0, 0, 0.64)"></span><code>rgba(0, 0, 0, 0.64)</code></span><span class="g-colour__use">Overlay behind sheets and dialogs.</span></div></div><h2>Text</h2><div class="g-colours"><div class="g-colours__head" aria-hidden="true"><span>Token</span><span>Light</span><span>Dark</span><span>Use</span></div><div class="g-colour"><code class="g-colour__name">--ink</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#1F1B16"></span><code>#1F1B16</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#F2F0EC"></span><code>#F2F0EC</code></span><span class="g-colour__use">Primary text and amounts, on canvas, surface, surface-raised, surface-sunken and every *-soft fill.</span></div><div class="g-colour"><code class="g-colour__name">--ink-muted</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#5A5650"></span><code>#5A5650</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#B9BDCA"></span><code>#B9BDCA</code></span><span class="g-colour__use">Secondary text: descriptions, rule summaries, naira equivalents. On canvas, surface, surface-sunken and brand-soft.</span></div><div class="g-colour"><code class="g-colour__name">--ink-subtle</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#6C6862"></span><code>#6C6862</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#9B9FAD"></span><code>#9B9FAD</code></span><span class="g-colour__use">Timestamps, placeholders, helper text. On canvas, surface and surface-sunken (4.7:1 minimum in light).</span></div><div class="g-colour"><code class="g-colour__name">--ink-inverse</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#FFFFFF"></span><code>#FFFFFF</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#081437"></span><code>#081437</code></span><span class="g-colour__use">Text and icons on surface-inverse only.</span></div></div><h2>Lines and focus</h2><div class="g-colours"><div class="g-colours__head" aria-hidden="true"><span>Token</span><span>Light</span><span>Dark</span><span>Use</span></div><div class="g-colour"><code class="g-colour__name">--line</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#E0DCD6"></span><code>#E0DCD6</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#292D3B"></span><code>#292D3B</code></span><span class="g-colour__use">Hairline dividers and card outlines. Decorative only; never the only boundary of a control.</span></div><div class="g-colour"><code class="g-colour__name">--line-strong</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#87827C"></span><code>#87827C</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#6F7484"></span><code>#6F7484</code></span><span class="g-colour__use">Borders of inputs, switches and secondary buttons. At least 3:1 on canvas, surface and surface-sunken in both themes.</span></div><div class="g-colour"><code class="g-colour__name">--focus-ring</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#5074D2"></span><code>#5074D2</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#7598EC"></span><code>#7598EC</code></span><span class="g-colour__use">The 2px keyboard focus ring, drawn 2px outside the control. At least 3:1 on every surface in both themes.</span></div></div><h2>Brand: adire indigo</h2><div class="g-colours"><div class="g-colours__head" aria-hidden="true"><span>Token</span><span>Light</span><span>Dark</span><span>Use</span></div><div class="g-colour"><code class="g-colour__name">--brand</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#1A3175"></span><code>#1A3175</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#A1BDFC"></span><code>#A1BDFC</code></span><span class="g-colour__use">Adire indigo. Fill of the one primary button per view, the active tab indicator and selected controls. Text on it is on-brand.</span></div><div class="g-colour"><code class="g-colour__name">--brand-hover</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#102154"></span><code>#102154</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#C8D9FE"></span><code>#C8D9FE</code></span><span class="g-colour__use">Hover and pressed fill for anything filled with brand.</span></div><div class="g-colour"><code class="g-colour__name">--on-brand</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#FFFFFF"></span><code>#FFFFFF</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#081437"></span><code>#081437</code></span><span class="g-colour__use">Text and icons on brand and brand-hover fills. Never use white on brand in the dark theme.</span></div><div class="g-colour"><code class="g-colour__name">--brand-text</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#254193"></span><code>#254193</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#A1BDFC"></span><code>#A1BDFC</code></span><span class="g-colour__use">Links, active tab labels, brand-coloured text and icons on canvas, surface and brand-soft.</span></div><div class="g-colour"><code class="g-colour__name">--brand-soft</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#E3EBFE"></span><code>#E3EBFE</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#1B253F"></span><code>#1B253F</code></span><span class="g-colour__use">Selected rows, info notices, the family view header band. Text on it is ink or brand-text.</span></div><div class="g-colour"><code class="g-colour__name">--brand-soft-hover</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#C8D9FE"></span><code>#C8D9FE</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#232F4C"></span><code>#232F4C</code></span><span class="g-colour__use">Hover on brand-soft rows and chips.</span></div></div><h2>Accent: camwood, for commitment locks only</h2><div class="g-colours"><div class="g-colours__head" aria-hidden="true"><span>Token</span><span>Light</span><span>Dark</span><span>Use</span></div><div class="g-colour"><code class="g-colour__name">--accent</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#AC4C29"></span><code>#AC4C29</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#F4B59F"></span><code>#F4B59F</code></span><span class="g-colour__use">Camwood. Used only for commitment locks and the eyelet in the logo. Never for errors, never for primary actions.</span></div><div class="g-colour"><code class="g-colour__name">--on-accent</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#FFFFFF"></span><code>#FFFFFF</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#330F03"></span><code>#330F03</code></span><span class="g-colour__use">Text and icons on an accent fill.</span></div><div class="g-colour"><code class="g-colour__name">--accent-text</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#8B3B1D"></span><code>#8B3B1D</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#F4B59F"></span><code>#F4B59F</code></span><span class="g-colour__use">Camwood text and icons: the Locked badge, lock dates. On canvas, surface and accent-soft (5.7:1 minimum).</span></div><div class="g-colour"><code class="g-colour__name">--accent-soft</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#E8E3DC"></span><code>#E8E3DC</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#2E2722"></span><code>#2E2722</code></span><span class="g-colour__use">Warm cotton behind the Locked badge and the lock notice. Deliberately neutral so a lock never reads as an error or a warning.</span></div></div><h2>Status</h2><div class="g-colours"><div class="g-colours__head" aria-hidden="true"><span>Token</span><span>Light</span><span>Dark</span><span>Use</span></div><div class="g-colour"><code class="g-colour__name">--positive</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#006933"></span><code>#006933</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#9CD6AB"></span><code>#9CD6AB</code></span><span class="g-colour__use">Money in, success, Final status. Text and icons on canvas, surface and positive-soft. Always paired with a word or icon.</span></div><div class="g-colour"><code class="g-colour__name">--positive-soft</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#D5F7DD"></span><code>#D5F7DD</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#112D1A"></span><code>#112D1A</code></span><span class="g-colour__use">Background of success notices and Final badges.</span></div><div class="g-colour"><code class="g-colour__name">--caution</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#734F03"></span><code>#734F03</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#E3C08A"></span><code>#E3C08A</code></span><span class="g-colour__use">Near the limit, pending, needs attention. Text and icons on canvas, surface and caution-soft.</span></div><div class="g-colour"><code class="g-colour__name">--caution-soft</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#FEEACB"></span><code>#FEEACB</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#342305"></span><code>#342305</code></span><span class="g-colour__use">Background of pending badges and caution notices.</span></div><div class="g-colour"><code class="g-colour__name">--negative</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#9C202B"></span><code>#9C202B</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#FFADA9"></span><code>#FFADA9</code></span><span class="g-colour__use">Errors, declined requests, blocked payments. Text and icons on canvas, surface and negative-soft.</span></div><div class="g-colour"><code class="g-colour__name">--negative-soft</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#FEE7E5"></span><code>#FEE7E5</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#3B1C1B"></span><code>#3B1C1B</code></span><span class="g-colour__use">Background of error notices and Declined badges.</span></div><div class="g-colour"><code class="g-colour__name">--negative-solid</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#C02D39"></span><code>#C02D39</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#FFADA9"></span><code>#FFADA9</code></span><span class="g-colour__use">Fill of destructive buttons (Decline, Withdraw all). Text on it is on-negative.</span></div><div class="g-colour"><code class="g-colour__name">--on-negative</code><span class="g-colour__val"><span class="g-colour__th">Light</span><span class="g-sw" style="background:#FFFFFF"></span><code>#FFFFFF</code></span><span class="g-colour__val"><span class="g-colour__th">Dark</span><span class="g-sw" style="background:#390509"></span><code>#390509</code></span><span class="g-colour__use">Text and icons on negative-solid.</span></div></div><h2>Pocket hues</h2><p>Each pocket keeps one hue: the tint and ink for its icon disc, the solid for its allowance meter. Never use them as status colours.</p><div class="g-hues"><div class="g-hue"><div class="g-hue__row"><div class="g-hue__theme" style="background:#F9F6F2"><span class="g-hue__disc" style="background:#FDE9D4;color:#6F4502">Aa</span><span class="g-hue__bar" style="background:#BE7C1C"></span></div><div class="g-hue__theme" style="background:#0B0E18"><span class="g-hue__disc" style="background:#3E290F;color:#F7C790">Aa</span><span class="g-hue__bar" style="background:#D49648"></span></div></div><p><strong>Palm</strong> <code>--pocket-palm</code>, <code>-tint</code>, <code>-ink</code></p></div><div class="g-hue"><div class="g-hue__row"><div class="g-hue__theme" style="background:#F9F6F2"><span class="g-hue__disc" style="background:#DCF0FF;color:#015580">Aa</span><span class="g-hue__bar" style="background:#2D95D3"></span></div><div class="g-hue__theme" style="background:#0B0E18"><span class="g-hue__disc" style="background:#133144;color:#A4D8FE">Aa</span><span class="g-hue__bar" style="background:#55AEE8"></span></div></div><p><strong>Sky</strong> <code>--pocket-sky</code>, <code>-tint</code>, <code>-ink</code></p></div><div class="g-hue"><div class="g-hue__row"><div class="g-hue__theme" style="background:#F9F6F2"><span class="g-hue__disc" style="background:#FEE7E2;color:#813426">Aa</span><span class="g-hue__bar" style="background:#CF6B58"></span></div><div class="g-hue__theme" style="background:#0B0E18"><span class="g-hue__disc" style="background:#44241E;color:#FFBFB2">Aa</span><span class="g-hue__bar" style="background:#E68774"></span></div></div><p><strong>Clay</strong> <code>--pocket-clay</code>, <code>-tint</code>, <code>-ink</code></p></div><div class="g-hue"><div class="g-hue__row"><div class="g-hue__theme" style="background:#F9F6F2"><span class="g-hue__disc" style="background:#D3F5F2;color:#015C59">Aa</span><span class="g-hue__bar" style="background:#079A94"></span></div><div class="g-hue__theme" style="background:#0B0E18"><span class="g-hue__disc" style="background:#033633;color:#87E4DE">Aa</span><span class="g-hue__bar" style="background:#1DBCB5"></span></div></div><p><strong>Teal</strong> <code>--pocket-teal</code>, <code>-tint</code>, <code>-ink</code></p></div><div class="g-hue"><div class="g-hue__row"><div class="g-hue__theme" style="background:#F9F6F2"><span class="g-hue__disc" style="background:#FAE5F9;color:#6F376E">Aa</span><span class="g-hue__bar" style="background:#B66EB4"></span></div><div class="g-hue__theme" style="background:#0B0E18"><span class="g-hue__disc" style="background:#3B243A;color:#F2BCEF">Aa</span><span class="g-hue__bar" style="background:#CD89CB"></span></div></div><p><strong>Plum</strong> <code>--pocket-plum</code>, <code>-tint</code>, <code>-ink</code></p></div><div class="g-hue"><div class="g-hue__row"><div class="g-hue__theme" style="background:#F9F6F2"><span class="g-hue__disc" style="background:#EAF0D6;color:#4B5600">Aa</span><span class="g-hue__bar" style="background:#86962C"></span></div><div class="g-hue__theme" style="background:#0B0E18"><span class="g-hue__disc" style="background:#2C3112;color:#CBDA96">Aa</span><span class="g-hue__bar" style="background:#9EAF52"></span></div></div><p><strong>Olive</strong> <code>--pocket-olive</code>, <code>-tint</code>, <code>-ink</code></p></div></div><p>The measured contrast of every text pair is in Accessibility.</p></div></template><template id="p-typography"><header class="g-head"><p class="g-eyebrow">Foundations</p><h1>Typography</h1><p class="g-lede">Three families, each with a job, tested for the naira sign and every Yoruba, Igbo and Hausa letter.</p></header><div class="g-body"><div class="g-fams"><div class="g-fam"><p class="g-fam__sample" style="font-family:var(--font-display)">Aa ₦ 0123456789</p><p><strong>Bricolage Grotesque</strong><br><span class="g-muted">Titles, large amounts, keypad digits</span><br><code>--font-display</code></p></div><div class="g-fam"><p class="g-fam__sample" style="font-family:var(--font-sans)">Ṣadé · Owó ilé-ìwé · Kuɗin makaranta · Ego ụlọ akwụkwọ</p><p><strong>Inter</strong><br><span class="g-muted">Interface text and everything people type</span><br><code>--font-sans</code></p></div><div class="g-fam"><p class="g-fam__sample" style="font-family:var(--font-mono)">0x3600…0000 O0 l1</p><p><strong>IBM Plex Mono</strong><br><span class="g-muted">Addresses and receipt numbers only</span><br><code>--font-mono</code></p></div></div><h2>Display</h2><p class="g-note">Bricolage Grotesque, for product-written headings and large amounts only. The shipped file carries English, currency and number glyphs, so names, labels and memos typed by people never use it.</p><div class="g-specs"><div class="g-spec"><div class="g-spec__meta"><code>.ek-type-display-xl</code><span>48px / 52px · weight 700 · tracking -0.025em</span></div><p class="g-spec__sample" style="font-family:var(--font-display);font-size:48px;line-height:52px;font-weight:700;letter-spacing:-0.025em">Money sent home, with a purpose.</p><p class="g-spec__use">Landing hero on expanded screens only.</p></div><div class="g-spec"><div class="g-spec__meta"><code>.ek-type-display-lg</code><span>36px / 40px · weight 700 · tracking -0.02em</span></div><p class="g-spec__sample" style="font-family:var(--font-display);font-size:36px;line-height:40px;font-weight:700;letter-spacing:-0.02em">Money sent home, with a purpose.</p><p class="g-spec__use">Landing hero on compact screens; page titles on expanded screens.</p></div><div class="g-spec"><div class="g-spec__meta"><code>.ek-type-heading-xl</code><span>28px / 34px · weight 650 · tracking -0.015em</span></div><p class="g-spec__sample" style="font-family:var(--font-display);font-size:28px;line-height:34px;font-weight:650;letter-spacing:-0.015em">Your pockets</p><p class="g-spec__use">Page titles on compact and medium screens.</p></div><div class="g-spec"><div class="g-spec__meta"><code>.ek-type-heading-lg</code><span>22px / 28px · weight 650 · tracking -0.01em</span></div><p class="g-spec__sample" style="font-family:var(--font-display);font-size:22px;line-height:28px;font-weight:650;letter-spacing:-0.01em">Waiting for you</p><p class="g-spec__use">Section headings and sheet titles.</p></div></div><h2>Text</h2><p class="g-note">Inter carries every Yoruba, Igbo and Hausa letter and the naira sign, so all interface text and anything people type uses it.</p><div class="g-specs"><div class="g-spec"><div class="g-spec__meta"><code>.ek-type-heading-md</code><span>18px / 24px · weight 600 · tracking -0.005em</span></div><p class="g-spec__sample" style="font-family:var(--font-sans);font-size:18px;line-height:24px;font-weight:600;letter-spacing:-0.005em">Owó ilé-ìwé</p><p class="g-spec__use">Pocket labels, card titles, request titles.</p></div><div class="g-spec"><div class="g-spec__meta"><code>.ek-type-heading-sm</code><span>16px / 22px · weight 600</span></div><p class="g-spec__sample" style="font-family:var(--font-sans);font-size:16px;line-height:22px;font-weight:600">Rules</p><p class="g-spec__use">Group labels inside cards and sheets.</p></div><div class="g-spec"><div class="g-spec__meta"><code>.ek-type-body-lg</code><span>17px / 26px · weight 400</span></div><p class="g-spec__sample" style="font-family:var(--font-sans);font-size:17px;line-height:26px;font-weight:400">Mama can spend up to 40 USDC a week from Food.</p><p class="g-spec__use">Landing copy and the family view, where readers are less practised.</p></div><div class="g-spec"><div class="g-spec__meta"><code>.ek-type-body</code><span>16px / 24px · weight 400</span></div><p class="g-spec__sample" style="font-family:var(--font-sans);font-size:16px;line-height:24px;font-weight:400">Anything above the limit becomes a request you approve.</p><p class="g-spec__use">Default text and every input value. Inputs never go below 16px, which stops iOS from zooming.</p></div><div class="g-spec"><div class="g-spec__meta"><code>.ek-type-body-sm</code><span>14px / 20px · weight 400</span></div><p class="g-spec__sample" style="font-family:var(--font-sans);font-size:14px;line-height:20px;font-weight:400">Resets on Monday at 1:00 am</p><p class="g-spec__use">Secondary lines, descriptions, rule summaries.</p></div><div class="g-spec"><div class="g-spec__meta"><code>.ek-type-label</code><span>15px / 20px · weight 550 · tracking 0.003em</span></div><p class="g-spec__sample" style="font-family:var(--font-sans);font-size:15px;line-height:20px;font-weight:550;letter-spacing:0.003em">Approve and pay</p><p class="g-spec__use">Buttons, form labels, segmented options.</p></div><div class="g-spec"><div class="g-spec__meta"><code>.ek-type-label-sm</code><span>13px / 18px · weight 550 · tracking 0.005em</span></div><p class="g-spec__sample" style="font-family:var(--font-sans);font-size:13px;line-height:18px;font-weight:550;letter-spacing:0.005em">Pending</p><p class="g-spec__use">Badges, chips, small buttons.</p></div><div class="g-spec"><div class="g-spec__meta"><code>.ek-type-caption</code><span>12px / 16px · weight 500 · tracking 0.01em</span></div><p class="g-spec__sample" style="font-family:var(--font-sans);font-size:12px;line-height:16px;font-weight:500;letter-spacing:0.01em">Today, 2:14 pm</p><p class="g-spec__use">Timestamps, tab bar labels, helper text under amounts. The smallest text in the product.</p></div><div class="g-spec"><div class="g-spec__meta"><code>.ek-type-overline</code><span>12px / 16px · weight 600 · tracking 0.06em</span></div><p class="g-spec__sample" style="font-family:var(--font-sans);font-size:12px;line-height:16px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase">THIS WEEK</p><p class="g-spec__use">Eyebrows above sections, in English product copy only; never uppercase user text or Yoruba.</p></div></div><h2>Numbers</h2><p class="g-note">Every amount sets tabular figures (the ek-num class) so columns and live balances never shift.</p><div class="g-specs"><div class="g-spec"><div class="g-spec__meta"><code>.ek-type-amount-hero</code><span>44px / 48px · weight 700 · tracking -0.02em</span></div><p class="g-spec__sample" style="font-family:var(--font-display);font-size:44px;line-height:48px;font-weight:700;letter-spacing:-0.02em;font-variant-numeric:tabular-nums">$1,240.50</p><p class="g-spec__use">The balance on a pocket page and the amount being typed on the keypad.</p></div><div class="g-spec"><div class="g-spec__meta"><code>.ek-type-amount-lg</code><span>30px / 36px · weight 700 · tracking -0.015em</span></div><p class="g-spec__sample" style="font-family:var(--font-display);font-size:30px;line-height:36px;font-weight:700;letter-spacing:-0.015em;font-variant-numeric:tabular-nums">$86.00</p><p class="g-spec__use">The balance on a pocket card.</p></div><div class="g-spec"><div class="g-spec__meta"><code>.ek-type-amount-md</code><span>17px / 24px · weight 600</span></div><p class="g-spec__sample" style="font-family:var(--font-sans);font-size:17px;line-height:24px;font-weight:600;font-variant-numeric:tabular-nums">−$12.50</p><p class="g-spec__use">Amounts in the activity feed and on request cards.</p></div><div class="g-spec"><div class="g-spec__meta"><code>.ek-type-amount-sm</code><span>14px / 20px · weight 500</span></div><p class="g-spec__sample" style="font-family:var(--font-sans);font-size:14px;line-height:20px;font-weight:500;font-variant-numeric:tabular-nums">≈ ₦18,750</p><p class="g-spec__use">Naira equivalents and inline amounts.</p></div></div><h2>Code</h2><p class="g-note">IBM Plex Mono for machine strings only.</p><div class="g-specs"><div class="g-spec"><div class="g-spec__meta"><code>.ek-type-mono</code><span>13px / 20px · weight 400</span></div><p class="g-spec__sample" style="font-family:var(--font-mono);font-size:13px;line-height:20px;font-weight:400">0x3f2a9c1e5b7d4e8a9c217d4e5f6a8b90d1c2e3f4</p><p class="g-spec__use">Full addresses and receipt numbers in detail views.</p></div><div class="g-spec"><div class="g-spec__meta"><code>.ek-type-mono-sm</code><span>12px / 16px · weight 500</span></div><p class="g-spec__sample" style="font-family:var(--font-mono);font-size:12px;line-height:16px;font-weight:500">0x3f2a…9c1e</p><p class="g-spec__use">Shortened addresses in rows and chips.</p></div></div></div></template><template id="p-space"><header class="g-head"><p class="g-eyebrow">Foundations</p><h1>Space and shape</h1><p class="g-lede">A 4px scale, soft corners from the tied circles of adire oniko, and light elevation.</p></header><div class="g-body"><h2>Spacing</h2><p class="g-note">4px base. Mobile gutters are space-4; expanded gutters are space-8.</p><div class="g-spaces"><div class="g-space"><code>--space-1</code><span class="g-num">4px</span><span class="g-space__bar" style="width:4px"></span><span class="g-muted">Icon to label; badge padding block.</span></div><div class="g-space"><code>--space-2</code><span class="g-num">8px</span><span class="g-space__bar" style="width:8px"></span><span class="g-muted">Inside chips; between a label and its input.</span></div><div class="g-space"><code>--space-3</code><span class="g-num">12px</span><span class="g-space__bar" style="width:12px"></span><span class="g-muted">Between rows in a card; button padding block.</span></div><div class="g-space"><code>--space-4</code><span class="g-num">16px</span><span class="g-space__bar" style="width:16px"></span><span class="g-muted">Compact screen gutter; card padding on compact screens.</span></div><div class="g-space"><code>--space-5</code><span class="g-num">20px</span><span class="g-space__bar" style="width:20px"></span><span class="g-muted">Card padding on medium and expanded screens; button padding inline.</span></div><div class="g-space"><code>--space-6</code><span class="g-num">24px</span><span class="g-space__bar" style="width:24px"></span><span class="g-muted">Between cards; sheet padding.</span></div><div class="g-space"><code>--space-8</code><span class="g-num">32px</span><span class="g-space__bar" style="width:32px"></span><span class="g-muted">Between sections; expanded screen gutter.</span></div><div class="g-space"><code>--space-10</code><span class="g-num">40px</span><span class="g-space__bar" style="width:40px"></span><span class="g-muted">Above page titles on expanded screens.</span></div><div class="g-space"><code>--space-12</code><span class="g-num">48px</span><span class="g-space__bar" style="width:48px"></span><span class="g-muted">Between major landing sections on compact screens.</span></div><div class="g-space"><code>--space-16</code><span class="g-num">64px</span><span class="g-space__bar" style="width:64px"></span><span class="g-muted">Between major landing sections on expanded screens.</span></div><div class="g-space"><code>--space-20</code><span class="g-num">80px</span><span class="g-space__bar" style="width:80px"></span><span class="g-muted">Landing hero padding on expanded screens.</span></div></div><h2>Radius</h2><p class="g-note">Soft corners from the tied circles of adire oniko; buttons and chips are full pills.</p><div class="g-tiles"><div class="g-tile"><span class="g-tile__box" style="border-radius:var(--radius-xs)"></span><code>--radius-xs</code><span class="g-num">6px</span><span class="g-muted">Skeleton lines, small inline chips.</span></div><div class="g-tile"><span class="g-tile__box" style="border-radius:var(--radius-sm)"></span><code>--radius-sm</code><span class="g-num">10px</span><span class="g-muted">Icon buttons in dense rows, keypad keys, segmented control thumb.</span></div><div class="g-tile"><span class="g-tile__box" style="border-radius:var(--radius-md)"></span><code>--radius-md</code><span class="g-num">14px</span><span class="g-muted">Inputs, notices, list containers.</span></div><div class="g-tile"><span class="g-tile__box" style="border-radius:var(--radius-lg)"></span><code>--radius-lg</code><span class="g-num">20px</span><span class="g-muted">Cards and pocket cards.</span></div><div class="g-tile"><span class="g-tile__box" style="border-radius:var(--radius-xl)"></span><code>--radius-xl</code><span class="g-num">28px</span><span class="g-muted">Top corners of bottom sheets; dialogs.</span></div><div class="g-tile"><span class="g-tile__box" style="border-radius:var(--radius-full)"></span><code>--radius-full</code><span class="g-num">9999px</span><span class="g-muted">Buttons, badges, tabs, avatars, meters.</span></div></div><h2>Shadow</h2><p class="g-note">Light theme lifts with soft indigo-tinted shadows; dark theme relies on tone and hairlines. These follow the gallery theme.</p><div class="g-tiles"><div class="g-tile g-tile--shadow"><span class="g-tile__box g-tile__box--shadow" style="box-shadow:var(--shadow-xs)"></span><code>--shadow-xs</code><span class="g-muted">Segmented control thumb, pressed keypad key.</span></div><div class="g-tile g-tile--shadow"><span class="g-tile__box g-tile__box--shadow" style="box-shadow:var(--shadow-sm)"></span><code>--shadow-sm</code><span class="g-muted">Cards at rest on canvas.</span></div><div class="g-tile g-tile--shadow"><span class="g-tile__box g-tile__box--shadow" style="box-shadow:var(--shadow-md)"></span><code>--shadow-md</code><span class="g-muted">Hovered cards, menus, the sticky tab bar.</span></div><div class="g-tile g-tile--shadow"><span class="g-tile__box g-tile__box--shadow" style="box-shadow:var(--shadow-lg)"></span><code>--shadow-lg</code><span class="g-muted">Sheets, dialogs and toasts.</span></div></div><h2>Size</h2><p class="g-note">Hit areas follow the 44pt iOS and 48dp Android minimums.</p><div class="g-table"><table><thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead><tbody><tr><td><code>--size-icon-sm</code></td><td class="g-num">16px</td><td>Icons inside badges and captions.</td></tr><tr><td><code>--size-icon</code></td><td class="g-num">20px</td><td>Icons inside buttons, rows and inputs.</td></tr><tr><td><code>--size-icon-lg</code></td><td class="g-num">24px</td><td>Tab bar, app bar and empty-state icons.</td></tr><tr><td><code>--size-control-sm</code></td><td class="g-num">36px</td><td>Small buttons inside cards on expanded screens only.</td></tr><tr><td><code>--size-control-md</code></td><td class="g-num">44px</td><td>Default buttons, inputs, segmented controls.</td></tr><tr><td><code>--size-control-lg</code></td><td class="g-num">52px</td><td>The primary action of a screen or sheet on compact screens.</td></tr><tr><td><code>--size-tap-min</code></td><td class="g-num">44px</td><td>Minimum hit area for anything tappable, even when the visible shape is smaller.</td></tr><tr><td><code>--size-keypad-key</code></td><td class="g-num">56px</td><td>Keys on the amount keypad.</td></tr><tr><td><code>--size-appbar</code></td><td class="g-num">56px</td><td>Top app bar height on compact screens, before the safe area.</td></tr><tr><td><code>--size-tabbar</code></td><td class="g-num">64px</td><td>Bottom tab bar height, before the safe area inset.</td></tr><tr><td><code>--size-rail</code></td><td class="g-num">88px</td><td>Navigation rail width on medium screens.</td></tr><tr><td><code>--size-sidenav</code></td><td class="g-num">256px</td><td>Side navigation width on expanded screens.</td></tr><tr><td><code>--size-sheet-max</code></td><td class="g-num">560px</td><td>Maximum width of a sheet or dialog.</td></tr><tr><td><code>--size-reading-max</code></td><td class="g-num">680px</td><td>Maximum width of a single column of text or a form.</td></tr><tr><td><code>--size-content-max</code></td><td class="g-num">1120px</td><td>Maximum width of the content area beside the side navigation.</td></tr></tbody></table></div><h2>Breakpoints</h2><p class="g-note">Compact is the default below bp-medium. Values are min-widths.</p><div class="g-table"><table><thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead><tbody><tr><td><code>--bp-medium</code></td><td class="g-num">600px</td><td>Tablets portrait and large phones landscape: navigation rail, two-column pocket grid, sheets become centred dialogs.</td></tr><tr><td><code>--bp-expanded</code></td><td class="g-num">1024px</td><td>Laptops and tablets landscape: side navigation, detail panel beside lists.</td></tr><tr><td><code>--bp-wide</code></td><td class="g-num">1440px</td><td>Large desktops: three-column pocket grid, content centred at size-content-max.</td></tr></tbody></table></div><h2>Layers</h2><div class="g-table"><table><thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead><tbody><tr><td><code>--z-sticky</code></td><td class="g-num">10</td><td>Sticky app bar and section headers.</td></tr><tr><td><code>--z-nav</code></td><td class="g-num">20</td><td>Tab bar, rail and side navigation.</td></tr><tr><td><code>--z-sheet</code></td><td class="g-num">40</td><td>Scrim, sheets and dialogs.</td></tr><tr><td><code>--z-toast</code></td><td class="g-num">50</td><td>Toasts, above sheets.</td></tr></tbody></table></div><h2>Opacity</h2><div class="g-table"><table><thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead><tbody><tr><td><code>--opacity-disabled</code></td><td class="g-num">0.45</td><td>Disabled controls. Always pair with aria-disabled and a reason nearby.</td></tr></tbody></table></div></div></template><template id="p-icons"><header class="g-head"><p class="g-eyebrow">Foundations</p><h1>Iconography</h1><p class="g-lede">Phosphor Regular, 20 and 24px; Fill only for the active tab.</p></header><div class="g-body"><figure class="g-stage" data-w="0" data-h="656"><div class="g-stage__frame"><iframe title="Icon preview" loading="lazy" data-src="components/Icon/preview.html" style="height:656px"></iframe></div><figcaption><span>Fills the available width</span><a href="components/Icon/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>The 64 Phosphor icons the product uses (MIT licence, phosphoricons.com), exported single ink in ink #1F1B16 at 24px for design tools and documents. In code, use the <code>Icon</code> component, which draws the same shapes in <code>currentColor</code>.</p>
+<p>Regular weight everywhere; the <code>-fill</code> variants are only for the active navigation item. Pocket icons: graduation-cap, bowl-food, house-line, first-aid-kit, lightning, device-mobile, bus, shopping-bag, hand-heart, piggy-bank.</p><p>Phosphor Icons, Regular weight, drawn inline from the bundle so they inherit <code>currentColor</code>.</p>
+<p><strong>Provide:</strong> <code>name</code>; <code>size</code> (20 inside controls and rows, 24 in navigation, 16 in badges and captions); <code>label</code> only when the icon stands alone and carries meaning.</p>
+<ul>
+<li>Use the Fill weight for one thing only: the active tab in <code>TabBar</code> and <code>SideNav</code>. Everything else is Regular.</li>
+<li>Pair an icon with a word wherever a person must act or understand a state. Icons alone are for universally known actions (close, back, copy) and always sit inside an <code>IconButton</code> with a label.</li>
+<li>Pocket icons come from the pocket set: graduation-cap (school fees), bowl-food (food), house-line (rent), first-aid-kit (emergency), lightning (electricity), device-mobile (airtime and data), bus (transport), shopping-bag (market), hand-heart (gifts and giving), piggy-bank (savings).</li>
+<li>Never use emoji in the interface.</li>
+</ul></div></template><template id="p-logo"><header class="g-head"><p class="g-eyebrow">Foundations</p><h1>Logo</h1><p class="g-lede">Wordmark and mark, drawn from tokens so they follow the theme.</p></header><div class="g-body"><figure class="g-stage" data-w="0" data-h="96"><div class="g-stage__frame"><iframe title="Logo preview" loading="lazy" data-src="components/Logo/preview.html" style="height:96px"></iframe></div><figcaption><span>Fills the available width</span><a href="components/Logo/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>The Earmark mark is a label tag with a camwood eyelet. In the app, prefer the <code>Logo</code> component, which follows the theme; use these files everywhere else (favicons, app icons, social images, documents).</p>
+<ul>
+<li><code>earmark-wordmark.svg</code>: tag in indigo #1A3175 with a camwood #AC4C29 eyelet, lowercase wordmark in ink #1F1B16. For light grounds.</li>
+<li><code>earmark-wordmark-on-dark.svg</code>: tag in #A1BDFC, eyelet #F4B59F, wordmark #F2F0EC. For dark grounds.</li>
+<li><code>earmark-mark.svg</code>: the tag alone, indigo with camwood eyelet. Favicon and small placements on light grounds.</li>
+<li><code>earmark-mark-on-dark.svg</code>: the tag alone for dark grounds.</li>
+<li><code>earmark-mark-mono-indigo.svg</code>: single ink, indigo #1A3175, for one-colour print and stamps.</li>
+<li><code>earmark-mark-mono-cotton.svg</code>: single ink, cotton #F9F6F2, for use on indigo or photographs.</li>
+<li><code>earmark-app-icon.svg</code>: full-bleed indigo square with a cotton tag inside the 80% safe zone. Maskable; export 192px and 512px PNGs from it for the web app manifest.</li>
+</ul>
+<p>Clear space equals the eyelet's diameter on every side. Minimum sizes: 24px for the mark, 28px tall for the wordmark. Do not recolour, stretch, outline or add effects.</p><h2>Files</h2><ul class="g-files"><li><a href="assets/Logos/earmark-app-icon.svg" target="_blank" rel="noopener"><code>earmark-app-icon.svg</code></a></li><li><a href="assets/Logos/earmark-mark-mono-cotton.svg" target="_blank" rel="noopener"><code>earmark-mark-mono-cotton.svg</code></a></li><li><a href="assets/Logos/earmark-mark-mono-indigo.svg" target="_blank" rel="noopener"><code>earmark-mark-mono-indigo.svg</code></a></li><li><a href="assets/Logos/earmark-mark-on-dark.svg" target="_blank" rel="noopener"><code>earmark-mark-on-dark.svg</code></a></li><li><a href="assets/Logos/earmark-mark.svg" target="_blank" rel="noopener"><code>earmark-mark.svg</code></a></li><li><a href="assets/Logos/earmark-wordmark-on-dark.svg" target="_blank" rel="noopener"><code>earmark-wordmark-on-dark.svg</code></a></li><li><a href="assets/Logos/earmark-wordmark.svg" target="_blank" rel="noopener"><code>earmark-wordmark.svg</code></a></li><li><code>png/</code> app icons at 180, 192 and 512 pixels, exported from <code>earmark-app-icon.svg</code></li></ul><p>The Earmark mark is a label tag with a camwood eyelet: money that carries a label. The component draws it from <code>brand</code>, <code>accent</code> and <code>ink</code>, so it follows the theme on its own.</p>
+<p><strong>Provide:</strong> <code>variant</code> (<code>wordmark</code> or <code>mark</code>), an optional <code>className</code> to set the height.</p>
+<ul>
+<li>Use the wordmark once per screen, in the side navigation or on the landing page. Use the mark alone where space is under 120px wide, such as the navigation rail and the app icon.</li>
+<li>Keep clear space around it equal to the eyelet's diameter on every side. Minimum height: 24px for the mark, 28px for the wordmark.</li>
+<li>Write the name as <strong>Earmark</strong> in running text. The wordmark alone is set lowercase by design.</li>
+<li>Do not recolour it, outline it, add shadows or place it on photographs. On any colour other than <code>canvas</code>, <code>surface</code> or <code>brand</code>, use the single-colour files from the Logos asset group.</li>
+</ul></div></template><template id="p-content"><header class="g-head"><p class="g-eyebrow">Guidelines</p><h1>Content and voice</h1><p class="g-lede">Earmark speaks like a trusted relative who is good with money: warm, direct and precise. Short sentences, everyday words, and the reader's own names for things.</p></header><div class="g-body"><h2>Voice</h2>
+<ul>
+<li>Call the reader "you". Call other people by the name the sender gave them ("Mama", "Tolu"), never "the spender" or "the sponsor".</li>
+<li>Lead with what matters to the reader, then the detail: "You can spend $28.00 more this week", not "Your weekly limit of $40.00 has $28.00 remaining".</li>
+<li>Celebrate quietly. "Paid" and "Added" are enough; no exclamation marks, no emoji.</li>
+<li>Never blame. Say what happened and what to do next.</li>
+<li>Keep one idea per sentence and aim for 15 words or fewer.</li>
+</ul>
+<h2>Word list</h2>
+<p>Earmark runs on a blockchain; people should never need to know that to use it.</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Do not say</th>
+<th>Say</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gas, gas fee</td>
+<td>network fee</td>
+<td></td>
+</tr>
+<tr>
+<td>gas float, gas top-up</td>
+<td>fee credit</td>
+<td>"Fee credit added" in the activity feed</td>
+</tr>
+<tr>
+<td>transaction, tx</td>
+<td>payment, or the action itself</td>
+<td>"Payment sent", "Pocket created"</td>
+</tr>
+<tr>
+<td>transaction hash, tx hash</td>
+<td>receipt</td>
+<td>"View receipt" links to the explorer</td>
+</tr>
+<tr>
+<td>confirmed, mined, settled</td>
+<td>Final</td>
+<td>"Final. This cannot be reversed."</td>
+</tr>
+<tr>
+<td>smart contract, protocol</td>
+<td>(leave out)</td>
+<td></td>
+</tr>
+<tr>
+<td>wallet address, public key</td>
+<td>address, or the saved name</td>
+<td>Show the name wherever one exists</td>
+</tr>
+<tr>
+<td>approve (the token allowance)</td>
+<td>Allow Earmark to move 250 USDC</td>
+<td>Only in the create and add-money steps</td>
+</tr>
+<tr>
+<td>deposit, fund</td>
+<td>Add money</td>
+<td></td>
+</tr>
+<tr>
+<td>withdraw</td>
+<td>Take money back</td>
+<td>"Withdraw" is acceptable in sender settings</td>
+</tr>
+<tr>
+<td>request (for family)</td>
+<td>Ask, Ask for approval</td>
+<td>Senders see "Requests"</td>
+</tr>
+<tr>
+<td>sponsor, spender</td>
+<td>you, or the person's name</td>
+<td></td>
+</tr>
+<tr>
+<td>blocklisted</td>
+<td>blocked by USDC compliance rules</td>
+<td></td>
+</tr>
+<tr>
+<td>mainnet, testnet, chain</td>
+<td>(leave out)</td>
+<td>The proof-of-concept banner is the only exception</td>
+</tr>
+<tr>
+<td>USD</td>
+<td>USDC, or $</td>
+<td>Name USDC once per screen, beside the main balance</td>
+</tr>
+</tbody>
+</table></div>
+<h2>Money</h2>
+<ul>
+<li>USDC: dollar sign, comma grouping, always two decimals: <strong>$1,240.50</strong>.</li>
+<li>Money in: <strong>+$40.00</strong> in <code>positive</code>. Money out: <strong>−$12.50</strong> with a true minus sign (U+2212) in <code>ink</code>.</li>
+<li>Naira: <strong>≈ ₦18,750</strong>, rounded to the whole naira, with the word "indicative" wherever the amount is being decided (entry, approval). Hide it if no rate is available; never show a stale rate without its time.</li>
+<li>Put amounts in action labels: "Pay $12.50", "Approve and pay $45.00" where space allows.</li>
+<li>Use <code>formatUSDC</code>, <code>formatNaira</code> and <code>shortAddress</code> from the bundle; never format money by hand.</li>
+</ul>
+<h2>Dates and times</h2>
+<ul>
+<li>Today and yesterday by name: "Today, 2:14 pm", "Yesterday, 9:05 am".</li>
+<li>Within the last hour: "12 min ago". Within the last week: "Mon 29 Sep". Older: "12 Dec 2025".</li>
+<li>Lock dates in full on the pocket page ("Locked until 12 Dec 2026") and short on badges ("Locked until 12 Dec").</li>
+<li>Resets by day name: "Resets Monday". 12-hour clock with lowercase am and pm.</li>
+</ul>
+<h2>Buttons and labels</h2>
+<ul>
+<li>Sentence case, verb first, as specific as possible: "Create pocket", "Add money", "Pay $12.50", "Ask for approval", "Approve and pay", "Decline".</li>
+<li>Never "OK", "Submit" or "Yes". The label says what will happen.</li>
+<li>Form labels are nouns ("Pocket name", "Weekly limit", "Pay to"). Hints explain consequences ("Your family sees this name").</li>
+</ul>
+<h2>Errors</h2>
+<p>Write every error as what happened, then what to do.</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Over the allowance</td>
+<td>Only $28.00 is available this week. Ask for approval instead.</td>
+</tr>
+<tr>
+<td>Not an approved payee</td>
+<td>This pocket only pays approved people. Ask for approval instead.</td>
+</tr>
+<tr>
+<td>Locked</td>
+<td>This pocket is locked until 12 Dec 2026.</td>
+</tr>
+<tr>
+<td>Pocket balance too low</td>
+<td>The pocket only holds $6.00.</td>
+</tr>
+<tr>
+<td>Bad address</td>
+<td>This is not a full Arc address. It should start with 0x and have 42 characters.</td>
+</tr>
+<tr>
+<td>Wrong network</td>
+<td>Your wallet is on another network. Switch to Arc to continue.</td>
+</tr>
+<tr>
+<td>Arc unreachable</td>
+<td>Could not reach Arc. Check your connection and try again.</td>
+</tr>
+<tr>
+<td>Blocked by compliance</td>
+<td>USDC compliance rules stopped this payment. The network fee was still charged.</td>
+</tr>
+<tr>
+<td>Wallet rejected</td>
+<td>You cancelled in your wallet. Nothing was sent.</td>
+</tr>
+</tbody>
+</table></div>
+<h2>Names and languages</h2>
+<ul>
+<li>Accept any script and any diacritics in pocket names, payee names and notes. Never auto-capitalise, trim tone marks or "correct" spelling.</li>
+<li>Show people's words exactly as they wrote them, in Inter, inside curly quotes when quoting a note.</li>
+<li>Product copy is British English for the MVP, kept in one file so Yoruba, Hausa and Igbo translations can follow.</li>
+</ul></div></template><template id="p-responsive"><header class="g-head"><p class="g-eyebrow">Guidelines</p><h1>Layout and responsiveness</h1><p class="g-lede">Earmark is one responsive web app that behaves like a native app on phones and like a calm dashboard on laptops. Design at 360px first, then let the layout open up; never hide content at larger sizes or remove it at smaller ones.</p></header><div class="g-body"><h2>Window sizes</h2>
+<p>The compact limit matches the 600px compact window-size class that Android and Material Design use, so phone layouts behave like native apps; the larger breakpoints follow common tablet and laptop widths.</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Size</th>
+<th>Width</th>
+<th>Navigation</th>
+<th>Content layout</th>
+<th>Gutter</th>
+<th>Sheets</th>
+<th>Amount entry</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Compact</td>
+<td>below <code>bp-medium</code> (under 600px)</td>
+<td><code>TabBar</code> at the bottom</td>
+<td>One column; requests before pockets</td>
+<td><code>space-4</code> (16px)</td>
+<td>Bottom sheet</td>
+<td><code>Keypad</code></td>
+</tr>
+<tr>
+<td>Medium</td>
+<td><code>bp-medium</code> (600px) to 1023px</td>
+<td>88px rail (<code>size-rail</code>)</td>
+<td>Two-column card grid</td>
+<td><code>space-6</code> (24px)</td>
+<td>Centred dialog, 560px max</td>
+<td>Typed</td>
+</tr>
+<tr>
+<td>Expanded</td>
+<td><code>bp-expanded</code> (1024px) to 1439px</td>
+<td>256px side navigation (<code>size-sidenav</code>)</td>
+<td>Main column plus 336px side column</td>
+<td><code>space-8</code> (32px)</td>
+<td>Centred dialog</td>
+<td>Typed</td>
+</tr>
+<tr>
+<td>Wide</td>
+<td><code>bp-wide</code> (1440px) and up</td>
+<td>256px side navigation</td>
+<td>Same, content capped at <code>size-content-max</code> (1120px) and centred</td>
+<td><code>space-10</code> (40px)</td>
+<td>Centred dialog</td>
+<td>Typed</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>AppShell</code>, <code>.ek-page</code>, <code>.ek-grid</code> and <code>.ek-split</code> apply all of this; screens only compose them. Test at 360, 390 and 412px (common Android and iPhone widths), 768, 1024, 1280 and 1440px.</p>
+<h2>The phone app</h2>
+<ul>
+<li><strong>Viewport:</strong> <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"&gt;</code>. Never disable zoom.</li>
+<li><strong>Safe areas:</strong> <code>AppBar</code>, <code>TabBar</code>, <code>Sheet</code> and <code>.ek-page</code> pad for <code>env(safe-area-inset-*)</code>, so the app is safe edge to edge on notched phones and when installed.</li>
+<li><strong>Heights:</strong> use <code>dvh</code> units (<code>100dvh</code>), not <code>vh</code>, so the layout follows the mobile browser's toolbars.</li>
+<li><strong>Touch:</strong> every target is at least <code>size-tap-min</code> (44px) with 8px between neighbours. The primary action of a task sits at the bottom, full width, <code>size-control-lg</code> (52px).</li>
+<li><strong>Keyboards:</strong> amounts use the on-screen <code>Keypad</code> on phones. Other fields set <code>inputmode</code>, <code>enterkeyhint</code> and <code>autocomplete</code> so the right keyboard appears, and addresses set <code>autocomplete="off"</code>, <code>autocapitalize="off"</code> and <code>spellcheck="false"</code>.</li>
+<li><strong>Task screens</strong> (Pay, Ask, Add money, Create pocket) hide the tab bar and show only a back button, so there is one way out.</li>
+<li><strong>Landscape phones</strong> keep the compact layout; sheets scroll within <code>92dvh</code>.</li>
+</ul>
+<h2>Installable app (PWA)</h2>
+<p>Ship a web app manifest so family members can add Earmark to their home screen and open it like any app:</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;Earmark&quot;,
+  &quot;short_name&quot;: &quot;Earmark&quot;,
+  &quot;start_url&quot;: &quot;/#/&quot;,
+  &quot;display&quot;: &quot;standalone&quot;,
+  &quot;background_color&quot;: &quot;#F9F6F2&quot;,
+  &quot;theme_color&quot;: &quot;#F9F6F2&quot;,
+  &quot;icons&quot;: [
+    { &quot;src&quot;: &quot;/icons/earmark-192.png&quot;, &quot;sizes&quot;: &quot;192x192&quot;, &quot;type&quot;: &quot;image/png&quot; },
+    { &quot;src&quot;: &quot;/icons/earmark-512.png&quot;, &quot;sizes&quot;: &quot;512x512&quot;, &quot;type&quot;: &quot;image/png&quot; },
+    { &quot;src&quot;: &quot;/icons/earmark-app-icon.svg&quot;, &quot;sizes&quot;: &quot;any&quot;, &quot;type&quot;: &quot;image/svg+xml&quot;, &quot;purpose&quot;: &quot;maskable&quot; }
+  ]
+}
+</code></pre>
+<p>Export the PNG icons from <code>earmark-app-icon.svg</code> (Logos asset group); its tag sits inside the 80% safe zone for maskable icons. Set the browser bar colour per theme:</p>
+<pre><code class="language-html">&lt;meta name=&quot;theme-color&quot; content=&quot;#F9F6F2&quot; media=&quot;(prefers-color-scheme: light)&quot;&gt;
+&lt;meta name=&quot;theme-color&quot; content=&quot;#0B0E18&quot; media=&quot;(prefers-color-scheme: dark)&quot;&gt;
+</code></pre>
+<h2>Grids and alignment</h2>
+<ul>
+<li>Cards sit in <code>.ek-grid</code>: as many columns as fit at a 280px minimum, 16px gaps on phones and 20px from 600px. Card actions are pinned to the bottom so a row of cards lines up.</li>
+<li>Forms and reading text never exceed <code>size-reading-max</code> (680px), even on wide screens.</li>
+<li>Align numbers to the right in lists and to the left on cards; never centre a column of amounts except the single amount being entered.</li>
+</ul>
+<h2>Performance on real networks</h2>
+<ul>
+<li>Total font payload is about 267 KB: preload Inter (145 KB) only; Bricolage Grotesque (88 KB) and IBM Plex Mono load on first use with <code>font-display: swap</code>.</li>
+<li>Keep the JavaScript bundle under 300 KB gzipped. No images in the interface; the logo and icons are inline SVG.</li>
+<li>Render skeletons for anything read from Arc, and never block the whole screen on the naira rate.</li>
+</ul></div></template><template id="p-patterns"><header class="g-head"><p class="g-eyebrow">Guidelines</p><h1>Screen patterns</h1><p class="g-lede">Each screen in the product, built only from this system's components and layout classes. The four Screens previews show them live at 390px and 1280px.</p></header><div class="g-body"><h2>Landing (<code>/#/</code>)</h2>
+<ul>
+<li>Compact: logo, <code>display-lg</code> headline "Money sent home, with a purpose.", one <code>body-lg</code> sentence, the primary "Connect wallet" button (<code>lg</code>, full width), then "See a live pocket" as a ghost link. Below: three numbered steps (Fund a pocket, Set the rules, Watch it spent) and the proof-of-concept <code>Notice</code>.</li>
+<li>Expanded: headline in <code>display-xl</code> on the left, a real <code>PocketCard</code> (family view, read-only) on the right as the illustration. No stock photos, no illustrations of people.</li>
+</ul>
+<h2>Sender dashboard (<code>/#/send</code>)</h2>
+<ul>
+<li>Page head: eyebrow "Across 4 pockets", title "Your pockets", lede with the total in USDC and naira. Actions: "Share family link" (secondary) and "New pocket" (primary, the only one).</li>
+<li><code>.ek-split</code>: pockets in <code>.ek-grid</code> in the main column; "Waiting for you" (<code>RequestCard</code> list) and a short <code>ActivityList</code> in the side column, marked <code>.ek-split__lead</code> so requests come first on phones.</li>
+<li>Empty: <code>EmptyState</code> "No pockets yet" with "Create a pocket".</li>
+<li>Loading: three skeleton pocket cards and one skeleton request.</li>
+</ul>
+<h2>New pocket (<code>/#/new</code>)</h2>
+<p>A task screen on phones, a sheet from 600px. Fields in this order, one decision each:</p>
+<ol>
+<li>Pocket name (<code>TextField</code>) with the pocket icon and hue picker beneath (<code>PocketIcon</code> row, radio group).</li>
+<li>Who can spend: the family member's address or a saved name.</li>
+<li>Allowance: <code>SegmentedControl</code> for the period, then the limit (<code>TextField</code> with <code>$</code> prefix). "Every payment is a request" is a <code>Switch</code> that sets the limit to 0.</li>
+<li>Rules: <code>Switch</code> "Approved payees only" (reveals the payee list) and <code>Switch</code> "Lock until a date" (reveals a date field, at most two years ahead).</li>
+<li>Fee credit: pre-set to $0.05 with a one-line explanation; editable under "More options".</li>
+<li>First deposit: <code>AmountInput</code>.</li>
+<li>Summary card, then the primary "Create pocket".</li>
+</ol>
+<p>After the tap, replace the form with <code>TxStatus</code>: "Allow Earmark to move 250 USDC", "Create the pocket", "Ready to share". On Final, show the family link with copy and share actions.</p>
+<h2>Pocket page, sender (<code>/#/p/:id</code>)</h2>
+<ul>
+<li><code>AppBar</code> with the pocket name on phones; page head on larger screens, with <code>is-people</code> on the title because the name was written by the sender.</li>
+<li>Top block: <code>PocketIcon</code> (<code>lg</code>), <code>Money</code> <code>hero</code>, then <code>AllowanceMeter</code>, then the rules as a short list with icons (period and limit, approved payees, lock date, fee credit).</li>
+<li>Actions: "Add money" (primary), "Take money back" (secondary, disabled with the lock date shown while locked), "Share" (icon button).</li>
+<li>Sections: Waiting for you (requests for this pocket), Approved payees (with Remove, <code>danger</code> in a confirmation sheet), Activity.</li>
+</ul>
+<h2>Family home (<code>/#/family</code>)</h2>
+<ul>
+<li>Greeting eyebrow, "Your pockets" title and a lede naming the sender. The latest top-up appears as a positive <code>Notice</code> for 24 hours.</li>
+<li>One <code>PocketCard</code> in family view per pocket, stacked; Pay (tonal) and Ask on each. Request-only pockets show one "Ask for a payment" button.</li>
+<li>A single <code>caption</code> line explains fees: "Network fees come out of your pockets. You never need to buy anything else."</li>
+<li>Empty: "Nothing here yet. Ṣadé will add money soon." with no action.</li>
+</ul>
+<h2>Pay and Ask</h2>
+<ul>
+<li>Phones: full task screen. <code>AppBar</code> "Pay from Food", <code>AmountInput</code> (read-only) at the top, the payee row, <code>Keypad</code> at the bottom, then the primary button "Pay $12.50" (<code>lg</code>, full width). If the amount goes over the allowance, the input says so and the button becomes "Ask for approval".</li>
+<li>600px and up: the same content in a <code>Sheet</code>, amount typed directly.</li>
+<li>Payee: pick from approved payees (radio list with names), or paste an address when the pocket allows any payee.</li>
+<li>Note: optional, 64 characters, with the hint "Notes are public on Arc".</li>
+<li>After the tap: <code>TxStatus</code> in place of the keypad, ending in Final with a receipt link and a toast "Paid $12.50 from Food".</li>
+</ul>
+<h2>Public pocket (<code>/#/view/:id</code>)</h2>
+<p>Read-only, no wallet: pocket header, balance, allowance and rules, then the full activity with receipts. A slim banner at the top: "You are viewing a pocket. Connect a wallet to act on it." This is the page reviewers and relatives open from a shared link.</p>
+<h2>Transaction lifecycle</h2>
+<p>Every on-chain action follows the same four states and never skips one on screen:</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>State</th>
+<th>Shown as</th>
+<th>Copy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Waiting for wallet</td>
+<td><code>Button</code> loading, <code>TxStatus</code> step active</td>
+<td>"Confirm in your wallet"</td>
+</tr>
+<tr>
+<td>Submitted</td>
+<td><code>TxStatus</code> step active</td>
+<td>"Sending to Arc"</td>
+</tr>
+<tr>
+<td>Final</td>
+<td><code>TxStatus</code> step done, receipt link, toast</td>
+<td>"Final" (payments add "This cannot be reversed.")</td>
+</tr>
+<tr>
+<td>Failed</td>
+<td><code>TxStatus</code> step error, <code>Notice</code> negative</td>
+<td>What happened and what to do (see Content and voice)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Arc finality is deterministic, so treat the first receipt as Final. Do not show confirmation counters.</p>
+<h2>Confirming irreversible actions</h2>
+<ul>
+<li>Payments need no extra "Are you sure?" step: the amount and payee are on screen, the button names the amount, and the wallet asks once more.</li>
+<li>"Take money back" of the whole balance and "Remove payee" open a short confirmation <code>Sheet</code> that restates the effect in one sentence, with the action repeated on the button.</li>
+</ul>
+<h2>System states</h2>
+<ul>
+<li><strong>Wrong network:</strong> a caution <code>Notice</code> at the top of the page with "Switch to Arc" as its action.</li>
+<li><strong>Arc unreachable:</strong> keep the last loaded data visible, mark it "Last updated 2:14 pm", and show a negative <code>Notice</code> with "Try again".</li>
+<li><strong>No naira rate:</strong> hide the naira lines; never show zero.</li>
+<li><strong>Proof of concept:</strong> the info <code>Notice</code> "Use small amounts while Earmark is being tested" stays on the sender dashboard until launch.</li>
+</ul></div></template><template id="p-accessibility"><header class="g-head"><p class="g-eyebrow">Guidelines</p><h1>Accessibility</h1><p class="g-lede">Earmark targets WCAG 2.2 level AA on every screen, in both themes. Many family members will use older phones in bright light, with larger system text, or with a screen reader, so accessibility is part of the core product, not an extra.</p></header><div class="g-body"><h2>Contrast</h2>
+<p>Every text pair below was measured from the tokens (WCAG 2 relative luminance). Text needs 4.5:1; control boundaries, focus rings and meaningful icons need 3:1.</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Foreground</th>
+<th>Background</th>
+<th>Light</th>
+<th>Dark</th>
+<th>Minimum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ink</code></td>
+<td><code>canvas</code></td>
+<td>15.9:1</td>
+<td>16.9:1</td>
+<td>4.5:1</td>
+</tr>
+<tr>
+<td><code>ink</code></td>
+<td><code>surface</code></td>
+<td>17.1:1</td>
+<td>15.8:1</td>
+<td>4.5:1</td>
+</tr>
+<tr>
+<td><code>ink-muted</code></td>
+<td><code>canvas</code></td>
+<td>6.8:1</td>
+<td>10.3:1</td>
+<td>4.5:1</td>
+</tr>
+<tr>
+<td><code>ink-muted</code></td>
+<td><code>surface-sunken</code></td>
+<td>6.2:1</td>
+<td>10.7:1</td>
+<td>4.5:1</td>
+</tr>
+<tr>
+<td><code>ink-subtle</code></td>
+<td><code>canvas</code></td>
+<td>5.1:1</td>
+<td>7.3:1</td>
+<td>4.5:1</td>
+</tr>
+<tr>
+<td><code>ink-subtle</code></td>
+<td><code>surface-sunken</code></td>
+<td>4.7:1</td>
+<td>7.6:1</td>
+<td>4.5:1</td>
+</tr>
+<tr>
+<td><code>on-brand</code></td>
+<td><code>brand</code></td>
+<td>12.1:1</td>
+<td>9.6:1</td>
+<td>4.5:1</td>
+</tr>
+<tr>
+<td><code>brand-text</code></td>
+<td><code>surface</code></td>
+<td>9.3:1</td>
+<td>9.6:1</td>
+<td>4.5:1</td>
+</tr>
+<tr>
+<td><code>brand-text</code></td>
+<td><code>brand-soft</code></td>
+<td>7.8:1</td>
+<td>8.1:1</td>
+<td>4.5:1</td>
+</tr>
+<tr>
+<td><code>accent-text</code></td>
+<td><code>accent-soft</code></td>
+<td>6.0:1</td>
+<td>8.4:1</td>
+<td>4.5:1</td>
+</tr>
+<tr>
+<td><code>on-accent</code></td>
+<td><code>accent</code></td>
+<td>5.5:1</td>
+<td>9.9:1</td>
+<td>4.5:1</td>
+</tr>
+<tr>
+<td><code>positive</code></td>
+<td><code>positive-soft</code></td>
+<td>5.9:1</td>
+<td>8.9:1</td>
+<td>4.5:1</td>
+</tr>
+<tr>
+<td><code>caution</code></td>
+<td><code>caution-soft</code></td>
+<td>6.3:1</td>
+<td>8.8:1</td>
+<td>4.5:1</td>
+</tr>
+<tr>
+<td><code>negative</code></td>
+<td><code>negative-soft</code></td>
+<td>6.7:1</td>
+<td>8.6:1</td>
+<td>4.5:1</td>
+</tr>
+<tr>
+<td><code>on-negative</code></td>
+<td><code>negative-solid</code></td>
+<td>5.7:1</td>
+<td>9.8:1</td>
+<td>4.5:1</td>
+</tr>
+<tr>
+<td><code>ink-inverse</code></td>
+<td><code>surface-inverse</code></td>
+<td>18.0:1</td>
+<td>15.8:1</td>
+<td>4.5:1</td>
+</tr>
+<tr>
+<td><code>line-strong</code></td>
+<td><code>surface</code></td>
+<td>3.8:1</td>
+<td>3.9:1</td>
+<td>3:1</td>
+</tr>
+<tr>
+<td><code>line-strong</code></td>
+<td><code>canvas</code></td>
+<td>3.5:1</td>
+<td>4.1:1</td>
+<td>3:1</td>
+</tr>
+<tr>
+<td><code>line-strong</code></td>
+<td><code>surface-sunken</code></td>
+<td>3.2:1</td>
+<td>4.3:1</td>
+<td>3:1</td>
+</tr>
+<tr>
+<td><code>focus-ring</code></td>
+<td><code>surface</code></td>
+<td>4.4:1</td>
+<td>6.4:1</td>
+<td>3:1</td>
+</tr>
+<tr>
+<td><code>focus-ring</code></td>
+<td><code>canvas</code></td>
+<td>4.1:1</td>
+<td>6.8:1</td>
+<td>3:1</td>
+</tr>
+<tr>
+<td><code>focus-ring</code></td>
+<td><code>surface-raised</code></td>
+<td>4.4:1</td>
+<td>5.8:1</td>
+<td>3:1</td>
+</tr>
+<tr>
+<td><code>pocket-palm-ink</code></td>
+<td><code>pocket-palm-tint</code></td>
+<td>7.0:1</td>
+<td>8.8:1</td>
+<td>4.5:1</td>
+</tr>
+<tr>
+<td><code>pocket-sky-ink</code></td>
+<td><code>pocket-sky-tint</code></td>
+<td>6.9:1</td>
+<td>8.9:1</td>
+<td>4.5:1</td>
+</tr>
+<tr>
+<td><code>pocket-clay-ink</code></td>
+<td><code>pocket-clay-tint</code></td>
+<td>7.2:1</td>
+<td>8.8:1</td>
+<td>4.5:1</td>
+</tr>
+<tr>
+<td><code>pocket-teal-ink</code></td>
+<td><code>pocket-teal-tint</code></td>
+<td>6.8:1</td>
+<td>9.0:1</td>
+<td>4.5:1</td>
+</tr>
+<tr>
+<td><code>pocket-plum-ink</code></td>
+<td><code>pocket-plum-tint</code></td>
+<td>7.2:1</td>
+<td>8.8:1</td>
+<td>4.5:1</td>
+</tr>
+<tr>
+<td><code>pocket-olive-ink</code></td>
+<td><code>pocket-olive-tint</code></td>
+<td>6.8:1</td>
+<td>9.0:1</td>
+<td>4.5:1</td>
+</tr>
+</tbody>
+</table></div>
+<p>Any new pairing must be checked the same way before it ships. Disabled controls (<code>opacity-disabled</code>) are exempt under WCAG but must still explain why they are disabled.</p>
+<h2>Colour is never the only signal</h2>
+<ul>
+<li>Status always has a word, and usually an icon: Final, Pending, Declined, Locked.</li>
+<li>Money in carries a plus sign as well as green; money out carries a minus sign.</li>
+<li>The allowance meter states the amount left in text; the bar only supports it.</li>
+<li>Locks use neutral cotton with a lock icon, so they are never confused with errors (crimson) or warnings (ochre).</li>
+</ul>
+<h2>Keyboard and focus</h2>
+<ul>
+<li>Everything works with a keyboard in a logical order. <code>AppShell</code> provides a "Skip to content" link.</li>
+<li>Focus shows as a solid 2px <code>focus-ring</code>, 2px outside the control, only for keyboard focus (<code>:focus-visible</code>).</li>
+<li><code>SegmentedControl</code> moves with arrow keys; <code>Sheet</code> traps focus, closes on Escape and returns focus to the control that opened it (native <code>dialog</code>).</li>
+</ul>
+<h2>Screen readers</h2>
+<ul>
+<li>Amounts are announced as words: <code>Money</code> reads "12.50 dollars, about 18,750 naira" instead of symbols.</li>
+<li><code>TxStatus</code> and <code>Toast</code> are polite live regions; a failed payment <code>Notice</code> is an alert.</li>
+<li>Icon-only buttons always carry a <code>label</code>. Navigation counts are read as "2 waiting".</li>
+<li>Addresses are shortened on screen, but copy and the tooltip use the full value.</li>
+<li>Test with TalkBack on Android Chrome (the main family device) and VoiceOver on iOS Safari.</li>
+</ul>
+<h2>Text size and zoom</h2>
+<ul>
+<li>Never disable pinch zoom. Layouts reflow at 200% browser zoom and at the largest Android font scale without horizontal scrolling at 320 CSS pixels.</li>
+<li>No fixed heights on anything that contains text; cards grow.</li>
+<li>Body text is 16px and the smallest text (<code>caption</code>) is 12px.</li>
+</ul>
+<h2>Motion and sensory settings</h2>
+<ul>
+<li><code>prefers-reduced-motion</code>: transitions become instant, skeletons stop pulsing, spinners slow but keep turning.</li>
+<li><code>forced-colors</code> (Windows high contrast): components add system-colour borders so buttons, badges and cards keep their edges.</li>
+</ul>
+<h2>Plain language and cognitive load</h2>
+<ul>
+<li>One task per screen on phones; one primary action per view.</li>
+<li>Confirm results with the amount and the pocket name ("Paid $12.50 from Food").</li>
+<li>Avoid time pressure: no timeouts on forms, and toasts pause while hovered or focused.</li>
+</ul>
+<h2>Release checklist</h2>
+<ul>
+<li><span class="g-check" aria-hidden="true"></span>Lighthouse accessibility score of 90 or more on landing, dashboard, family home and pay.</li>
+<li><span class="g-check" aria-hidden="true"></span>Every screen checked in both themes at 360px and 1280px.</li>
+<li><span class="g-check" aria-hidden="true"></span>Keyboard-only walkthrough of create, fund, pay, request, approve and take back.</li>
+<li><span class="g-check" aria-hidden="true"></span>TalkBack walkthrough of family home and pay.</li>
+<li><span class="g-check" aria-hidden="true"></span>200% zoom and largest system font on one Android phone.</li>
+</ul></div></template><template id="p-implementation"><header class="g-head"><p class="g-eyebrow">Guidelines</p><h1>Implementation</h1><p class="g-lede">How the Earmark web app (Vite, React, TypeScript, per the PRD) uses this system. Everything here is free: open fonts under the SIL Open Font License, Phosphor icons under MIT, no paid services.</p></header><div class="g-body"><h2>What to copy into the app</h2>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>From this system</th>
+<th>Into the app</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tokens.css</code></td>
+<td><code>web/src/styles/tokens.css</code></td>
+<td>Generated from <code>tokens.json</code>; includes the <code>@font-face</code> rules. Update the font URLs to <code>/fonts/...</code>.</td>
+</tr>
+<tr>
+<td><code>fonts/*.woff2</code> and <code>licenses/</code></td>
+<td><code>web/public/fonts/</code></td>
+<td>Keep the licence files with the fonts.</td>
+</tr>
+<tr>
+<td><code>components/bundle.css</code></td>
+<td><code>web/src/styles/earmark.css</code></td>
+<td>Component and layout styles with the <code>ek-</code> prefix.</td>
+</tr>
+<tr>
+<td><code>components/src/index.tsx</code>, <code>icons.json</code>, <code>logo.ts</code></td>
+<td><code>web/src/ds/</code></td>
+<td>Typed React source for every component.</td>
+</tr>
+<tr>
+<td>Logos asset group</td>
+<td><code>web/public/icons/</code></td>
+<td>App icon and share images.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Import order in <code>main.tsx</code>: <code>tokens.css</code>, then <code>earmark.css</code>, then your own styles.</p>
+<p>The component source reads a global <code>React</code> so the published bundle can run without a build. In the app, replace its first lines with a normal import:</p>
+<pre><code class="language-tsx">import * as React from 'react';
+import ICONS from './icons.json';
+import { TAG_PATH, RING_PATH, WORDMARK_PATH, WORDMARK_SCALE, WORDMARK_WIDTH } from './logo';
+</code></pre>
+<p>Then import components directly: <code>import { PocketCard, Money, formatUSDC } from './ds';</code>.</p>
+<h2><code>index.html</code></h2>
+<pre><code class="language-html">&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content&quot;&gt;
+  &lt;meta name=&quot;theme-color&quot; content=&quot;#F9F6F2&quot; media=&quot;(prefers-color-scheme: light)&quot;&gt;
+  &lt;meta name=&quot;theme-color&quot; content=&quot;#0B0E18&quot; media=&quot;(prefers-color-scheme: dark)&quot;&gt;
+  &lt;link rel=&quot;manifest&quot; href=&quot;/manifest.webmanifest&quot;&gt;
+  &lt;link rel=&quot;icon&quot; href=&quot;/icons/earmark-mark.svg&quot; type=&quot;image/svg+xml&quot;&gt;
+  &lt;link rel=&quot;preload&quot; href=&quot;/fonts/Inter-Variable.woff2&quot; as=&quot;font&quot; type=&quot;font/woff2&quot; crossorigin&gt;
+  &lt;script&gt;
+    (function () {
+      var saved = null;
+      try { saved = localStorage.getItem('ek-theme'); } catch (e) {}
+      var dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    })();
+  &lt;/script&gt;
+  &lt;title&gt;Earmark&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;&lt;div id=&quot;root&quot;&gt;&lt;/div&gt;&lt;script type=&quot;module&quot; src=&quot;/src/main.tsx&quot;&gt;&lt;/script&gt;&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>The inline script sets the theme before the first paint, so there is no flash. Store only the theme preference; the PRD rules out analytics and cookies.</p>
+<h2>Theme switch</h2>
+<p>Offer System, Light and Dark in Settings with a <code>SegmentedControl</code>. On change, set <code>data-theme</code> on <code>html</code>, save the choice (or remove it for System), and update the <code>theme-color</code> meta to <code>#F9F6F2</code> or <code>#0B0E18</code>.</p>
+<h2>Using tokens in your own CSS</h2>
+<p>Always reference the custom properties, never hex values:</p>
+<pre><code class="language-css">.rule-list { display: grid; gap: var(--space-3); padding: var(--space-4); border-radius: var(--radius-md); background: var(--surface); color: var(--ink-muted); }
+.rule-list strong { color: var(--ink); }
+</code></pre>
+<p>Breakpoints cannot be read from custom properties inside <code>@media</code>, so use the literal values: <code>600px</code>, <code>1024px</code>, <code>1440px</code>.</p>
+<p>Use plain CSS with these tokens, as the PRD allows. If Tailwind is added later, map tokens under new names (for example <code>--color-brand: var(--brand)</code>) and never redefine <code>--font-sans</code>, which the tokens already own.</p>
+<h2>Money and chain values</h2>
+<ul>
+<li>Keep USDC amounts as <code>bigint</code> in 6-decimal base units from the contract to the UI edge. Convert to a number only for display, through <code>formatUnits(value, 6)</code> from viem, then <code>formatUSDC</code>.</li>
+<li>Never mix the 18-decimal native balance with the 6-decimal ERC-20 value (PRD requirement A1).</li>
+<li>Parse user input with <code>parseUnits(amount, 6)</code>; the <code>AmountInput</code> and <code>applyKey</code> helpers already limit input to two decimals.</li>
+<li>Fetch the naira rate once an hour and pass it as <code>rate</code>; when it fails, pass nothing and the naira lines disappear.</li>
+</ul>
+<h2>Wiring transactions to <code>TxStatus</code></h2>
+<pre><code class="language-tsx">const [steps, setSteps] = React.useState([
+  { label: 'Confirm in your wallet', state: 'active' },
+  { label: 'Final', state: 'todo' },
+]);
+// after the wallet returns a hash:
+setSteps([{ label: 'Confirm in your wallet', state: 'done' }, { label: 'Final', detail: 'Sending to Arc', state: 'active' }]);
+// after the receipt:
+setSteps([{ label: 'Confirm in your wallet', state: 'done' }, { label: 'Final', detail: 'This cannot be reversed.', state: 'done' }]);
+</code></pre>
+<p>Map contract errors to the messages in Content and voice with one lookup table (<code>lib/errors.ts</code> in the PRD).</p>
+<h2>Review checklist for every screen</h2>
+<ul>
+<li><span class="g-check" aria-hidden="true"></span>Only tokens, type styles and <code>ek-</code> classes; no raw colours or ad hoc font sizes.</li>
+<li><span class="g-check" aria-hidden="true"></span>One primary button; repeated actions use <code>tonal</code>.</li>
+<li><span class="g-check" aria-hidden="true"></span>People's words (names, pocket labels, notes) in Inter, never in the display face.</li>
+<li><span class="g-check" aria-hidden="true"></span>Amounts through <code>Money</code> or the format helpers, with tabular numerals.</li>
+<li><span class="g-check" aria-hidden="true"></span>Checked at 360px and 1280px, in light and dark.</li>
+<li><span class="g-check" aria-hidden="true"></span>Every on-chain action shows <code>TxStatus</code> through to Final, with a receipt link.</li>
+<li><span class="g-check" aria-hidden="true"></span>No banned words from the word list.</li>
+</ul></div></template><template id="p-Button"><header class="g-head"><p class="g-eyebrow">Components · Actions</p><h1>Button</h1><p class="g-lede">One primary per view; tonal for repeated positive actions.</p></header><div class="g-body"><figure class="g-stage" data-w="0" data-h="272"><div class="g-stage__frame"><iframe title="Button preview" loading="lazy" data-src="components/Button/preview.html" style="height:272px"></iframe></div><figcaption><span>Fills the available width</span><a href="components/Button/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>Pill-shaped actions with a verb-first label. Primary (indigo) appears at most once per view, for the task the view exists for.</p>
+<p><strong>Provide:</strong> <code>variant</code>, <code>size</code>, the label as children, optional <code>iconStart</code> or <code>iconEnd</code>, <code>loading</code> while a transaction is in progress.</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Variant</th>
+<th>Use for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>primary</code></td>
+<td>The one main task of the view: Pay, Create pocket, Approve in a sheet.</td>
+</tr>
+<tr>
+<td><code>tonal</code></td>
+<td>Positive actions that repeat down a list: Add money on each pocket, Approve and pay on each request.</td>
+</tr>
+<tr>
+<td><code>secondary</code></td>
+<td>The alternative to a primary: Cancel, Share family link.</td>
+</tr>
+<tr>
+<td><code>ghost</code></td>
+<td>Low-emphasis actions and navigation: Decline, Ask, See all.</td>
+</tr>
+<tr>
+<td><code>danger</code></td>
+<td>Actions that remove something: Remove payee. Declining a request is not destructive, so it uses <code>ghost</code>.</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Sizes: <code>lg</code> (52px) for the primary action at the bottom of a phone screen or sheet; <code>md</code> (44px) everywhere else; <code>sm</code> (36px) only inside dense cards on expanded screens.</li>
+<li>Labels: sentence case, verb first, no full stop. Put the amount in payment labels: "Pay $12.50".</li>
+<li><code>loading</code> keeps the label, swaps the icon for a spinner and blocks double taps. Use it from the wallet prompt until the transaction is Final.</li>
+<li>Prefer leaving a button enabled and explaining the problem on tap. When you do disable it, say why nearby, for example "Limit reached. Ask for approval."</li>
+</ul></div></template><template id="p-IconButton"><header class="g-head"><p class="g-eyebrow">Components · Actions</p><h1>IconButton</h1><p class="g-lede">Always labelled; 44px hit area.</p></header><div class="g-body"><figure class="g-stage" data-w="0" data-h="88"><div class="g-stage__frame"><iframe title="IconButton preview" loading="lazy" data-src="components/IconButton/preview.html" style="height:88px"></iframe></div><figcaption><span>Fills the available width</span><a href="components/IconButton/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>A 44px round button that holds one icon, for well-known actions where a word would crowd the layout.</p>
+<p><strong>Provide:</strong> <code>icon</code> and <code>label</code> (required; it becomes the accessible name and the tooltip). Pass <code>href</code> to render a link.</p>
+<ul>
+<li>Use for Back, Close, More actions, Copy, Share. Anything less familiar gets a text <code>Button</code>.</li>
+<li><code>ghost</code> in app bars and rows, <code>secondary</code> when it sits beside secondary buttons, <code>tonal</code> for a highlighted tool.</li>
+<li><code>sm</code> shows a 36px circle but keeps a 44px hit area.</li>
+</ul></div></template><template id="p-AmountInput"><header class="g-head"><p class="g-eyebrow">Components · Inputs</p><h1>AmountInput</h1><p class="g-lede">The amount is the page; naira is indicative.</p></header><div class="g-body"><figure class="g-stage" data-w="0" data-h="176"><div class="g-stage__frame"><iframe title="AmountInput preview" loading="lazy" data-src="components/AmountInput/preview.html" style="height:176px"></iframe></div><figcaption><span>Fills the available width</span><a href="components/AmountInput/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>The large amount entry at the top of Pay, Ask and Add money, with the naira equivalent and what is available underneath.</p>
+<p><strong>Provide:</strong> <code>value</code> as a string, <code>onChange</code>, <code>rate</code> (naira per USDC, display only), <code>available</code> when there is a limit, <code>label</code>. Set <code>readOnly</code> when a <code>Keypad</code> drives it.</p>
+<ul>
+<li>On compact screens pair it with <code>Keypad</code> and set <code>readOnly</code>, so the system keyboard does not cover the screen. From 600px, let people type into it directly.</li>
+<li>The naira figure is always labelled "indicative" and only appears once an amount is entered. Never let it look like a quote.</li>
+<li>When the amount is more than is available, the component says so and suggests asking for approval. Keep the primary button's label in step: "Pay $12.50" or "Enter an amount".</li>
+</ul></div></template><template id="p-Keypad"><header class="g-head"><p class="g-eyebrow">Components · Inputs</p><h1>Keypad</h1><p class="g-lede">On-screen keypad for compact screens.</p></header><div class="g-body"><figure class="g-stage" data-w="390" data-h="424"><div class="g-stage__frame"><iframe title="Keypad preview" loading="lazy" data-src="components/Keypad/preview.html" style="height:424px"></iframe></div><figcaption><span>Shown at 390px wide</span><a href="components/Keypad/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>A 3 by 4 on-screen number pad for entering amounts on phones.</p>
+<p><strong>Provide:</strong> <code>onKey</code>, and apply keys with the exported <code>applyKey(value, key)</code> helper, which keeps two decimals and nine characters.</p>
+<ul>
+<li>Place it at the bottom of the screen, in thumb reach, directly above the primary button.</li>
+<li>Use it only on compact screens. On medium and expanded screens hide it and let the <code>AmountInput</code> take keyboard input.</li>
+<li>Keys are 56px tall. The delete key is labelled "Delete last digit" for screen readers.</li>
+</ul></div></template><template id="p-SegmentedControl"><header class="g-head"><p class="g-eyebrow">Components · Inputs</p><h1>SegmentedControl</h1><p class="g-lede">Two to four short, mutually exclusive options.</p></header><div class="g-body"><figure class="g-stage" data-w="0" data-h="152"><div class="g-stage__frame"><iframe title="SegmentedControl preview" loading="lazy" data-src="components/SegmentedControl/preview.html" style="height:152px"></iframe></div><figcaption><span>Fills the available width</span><a href="components/SegmentedControl/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>Two to four short, mutually exclusive choices shown side by side.</p>
+<p><strong>Provide:</strong> <code>label</code> (for screen readers), <code>options</code>, <code>value</code>, <code>onChange</code>; <code>block</code> to fill the width.</p>
+<ul>
+<li>Use for choices such as the limit period (Daily, Weekly, Monthly) or Pay versus Ask. Five or more options belong in a list.</li>
+<li>Arrow keys move the selection, as in a radio group.</li>
+<li>Keep labels to one or two words.</li>
+</ul></div></template><template id="p-Switch"><header class="g-head"><p class="g-eyebrow">Components · Inputs</p><h1>Switch</h1><p class="g-lede">For rules that apply straight away.</p></header><div class="g-body"><figure class="g-stage" data-w="0" data-h="208"><div class="g-stage__frame"><iframe title="Switch preview" loading="lazy" data-src="components/Switch/preview.html" style="height:208px"></iframe></div><figcaption><span>Fills the available width</span><a href="components/Switch/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>An on or off rule that takes effect as soon as it is set, with a label and a description in plain words.</p>
+<p><strong>Provide:</strong> <code>label</code>, <code>description</code>, <code>checked</code>, <code>onChange</code>.</p>
+<ul>
+<li>Use for pocket rules: "Approved payees only", "Lock until a date". The description says what happens to the family member, not how it works on-chain.</li>
+<li>When turning a switch on starts a transaction, show the <code>TxStatus</code> straight after and keep the switch in its old state until the change is Final.</li>
+<li>Do not use a switch inside a form that is saved with a button; use a checkbox pattern there.</li>
+</ul></div></template><template id="p-TextField"><header class="g-head"><p class="g-eyebrow">Components · Inputs</p><h1>TextField</h1><p class="g-lede">16px text, label above, hint or error below.</p></header><div class="g-body"><figure class="g-stage" data-w="0" data-h="336"><div class="g-stage__frame"><iframe title="TextField preview" loading="lazy" data-src="components/TextField/preview.html" style="height:336px"></iframe></div><figcaption><span>Fills the available width</span><a href="components/TextField/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>A labelled single-line or multi-line input with hint and error text.</p>
+<p><strong>Provide:</strong> <code>label</code> (always visible, never replaced by the placeholder), <code>value</code> and <code>onChange</code>, optional <code>hint</code>, <code>error</code>, <code>prefix</code>, <code>suffix</code>, <code>mono</code> for addresses, <code>multiline</code> for notes. Pass input attributes such as <code>inputMode</code>, <code>autoComplete</code> and <code>enterKeyHint</code> straight through.</p>
+<ul>
+<li>Text is 16px so iOS never zooms the page.</li>
+<li>Put the hint under the field, and replace nothing: an error appears above the hint, starts with an icon and says how to fix the problem.</li>
+<li>Use <code>mono</code> for addresses so characters can be compared one by one. Use <code>inputMode="decimal"</code> for amounts that are not on the keypad.</li>
+<li>Validate on blur or on submit, not on every keystroke.</li>
+<li>Labels and values accept any language. Pocket names such as "Owó ilé-ìwé", "Ego ụlọ akwụkwọ" or "Kuɗin makaranta" render correctly because the field uses Inter.</li>
+</ul></div></template><template id="p-Address"><header class="g-head"><p class="g-eyebrow">Components · Money</p><h1>Address</h1><p class="g-lede">Shortened, copyable, linked to the explorer.</p></header><div class="g-body"><figure class="g-stage" data-w="0" data-h="112"><div class="g-stage__frame"><iframe title="Address preview" loading="lazy" data-src="components/Address/preview.html" style="height:112px"></iframe></div><figcaption><span>Fills the available width</span><a href="components/Address/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>A wallet address shortened to its first six and last four characters, with copy and explorer actions.</p>
+<p><strong>Provide:</strong> <code>value</code> (the full address), optional <code>label</code>, <code>copy</code>, and <code>href</code> to the explorer page.</p>
+<ul>
+<li>The full address stays available in the tooltip and is copied whole.</li>
+<li>Announce copies to screen readers ("Address copied") and show a toast on screens where people will paste elsewhere.</li>
+<li>Never show an address where a pocket name or a payee's saved name exists. Addresses are a fallback for people who have not been named yet.</li>
+</ul></div></template><template id="p-AllowanceMeter"><header class="g-head"><p class="g-eyebrow">Components · Money</p><h1>AllowanceMeter</h1><p class="g-lede">Numbers carry the meaning; the bar is for a glance.</p></header><div class="g-body"><figure class="g-stage" data-w="0" data-h="200"><div class="g-stage__frame"><iframe title="AllowanceMeter preview" loading="lazy" data-src="components/AllowanceMeter/preview.html" style="height:200px"></iframe></div><figcaption><span>Fills the available width</span><a href="components/AllowanceMeter/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>Shows what is left of a pocket's allowance this period, as numbers first and a bar second.</p>
+<p><strong>Provide:</strong> <code>spent</code>, <code>limit</code>, <code>hue</code>, <code>periodLabel</code> (for example "this week"), <code>resetLabel</code> (for example "Resets Monday").</p>
+<ul>
+<li>At 80% used it adds "Almost used"; at 100% it says "Limit reached. Ask for approval." Both are shown in words, never by colour alone.</li>
+<li>A <code>limit</code> of 0 means every payment is a request; the component says so instead of drawing an empty bar.</li>
+<li>The numbers are the source of truth. The bar gives the glance.</li>
+</ul></div></template><template id="p-Badge"><header class="g-head"><p class="g-eyebrow">Components · Money</p><h1>Badge</h1><p class="g-lede">Status always carries a word, often an icon.</p></header><div class="g-body"><figure class="g-stage" data-w="0" data-h="104"><div class="g-stage__frame"><iframe title="Badge preview" loading="lazy" data-src="components/Badge/preview.html" style="height:104px"></iframe></div><figcaption><span>Fills the available width</span><a href="components/Badge/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>One or two words of status or a rule, on a tinted pill.</p>
+<p><strong>Provide:</strong> <code>tone</code>, the text, and optionally <code>icon</code> (each tone has a default icon; <code>false</code> removes it).</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Tone</th>
+<th>Means</th>
+<th>Default icon</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>positive</code></td>
+<td>Final, received</td>
+<td>check-circle</td>
+</tr>
+<tr>
+<td><code>caution</code></td>
+<td>Pending, waiting for someone</td>
+<td>clock</td>
+</tr>
+<tr>
+<td><code>negative</code></td>
+<td>Declined, failed, blocked</td>
+<td>x-circle</td>
+</tr>
+<tr>
+<td><code>accent</code></td>
+<td>Locked until a date</td>
+<td>lock-simple</td>
+</tr>
+<tr>
+<td><code>neutral</code></td>
+<td>A rule: Approved payees only</td>
+<td>none</td>
+</tr>
+<tr>
+<td><code>brand</code></td>
+<td>New, highlighted</td>
+<td>none</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>A badge never relies on colour alone: the word always carries the meaning.</li>
+<li>Keep badges to one line. If a status needs explaining, use a <code>Notice</code>.</li>
+</ul></div></template><template id="p-Money"><header class="g-head"><p class="g-eyebrow">Components · Money</p><h1>Money</h1><p class="g-lede">Tabular figures; money in is green with a plus, money out is ink.</p></header><div class="g-body"><figure class="g-stage" data-w="0" data-h="168"><div class="g-stage__frame"><iframe title="Money preview" loading="lazy" data-src="components/Money/preview.html" style="height:168px"></iframe></div><figcaption><span>Fills the available width</span><a href="components/Money/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>Formats and displays a USDC amount, with the indicative naira value underneath when a rate is given.</p>
+<p><strong>Provide:</strong> <code>value</code> (a number in USDC), <code>size</code>, optional <code>rate</code>, <code>direction</code> for feed rows, <code>align</code>.</p>
+<ul>
+<li>Sizes: <code>hero</code> for the balance on a pocket page and the amount being entered; <code>lg</code> on pocket and request cards; <code>md</code> in lists; <code>sm</code> inline.</li>
+<li>Money in (<code>direction="in"</code>) is green with a plus. Money out is <code>ink</code> with a true minus sign: spending is normal, not an error.</li>
+<li>All figures use tabular numerals, so balances do not jump as they update.</li>
+<li>Screen readers hear "12.50 dollars, about 18,750 naira" rather than symbols.</li>
+<li>Format rules: always two decimals for USDC; naira rounded to the whole naira with comma grouping; the unit "USDC" appears once per screen, beside the main balance.</li>
+</ul></div></template><template id="p-PocketIcon"><header class="g-head"><p class="g-eyebrow">Components · Money</p><h1>PocketIcon</h1><p class="g-lede">Each pocket keeps one hue for its icon and meter.</p></header><div class="g-body"><figure class="g-stage" data-w="0" data-h="160"><div class="g-stage__frame"><iframe title="PocketIcon preview" loading="lazy" data-src="components/PocketIcon/preview.html" style="height:160px"></iframe></div><figcaption><span>Fills the available width</span><a href="components/PocketIcon/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>The round icon that identifies a pocket, tinted with the pocket's hue.</p>
+<p><strong>Provide:</strong> <code>icon</code> from the pocket set, <code>hue</code>, <code>size</code> (<code>lg</code> 56px on pocket pages, <code>md</code> 44px on cards, <code>sm</code> 28px in rows).</p>
+<ul>
+<li>Each pocket keeps one hue everywhere: its icon, its meter fill and its label chip. Offer the six hues in the create form in this order: palm, sky, clay, teal, plum, olive.</li>
+<li>Default hues by purpose: food palm, school fees sky, rent clay, emergency teal, gifts plum, transport olive. People can change them.</li>
+</ul></div></template><template id="p-ActivityItem"><header class="g-head"><p class="g-eyebrow">Components · Pockets</p><h1>ActivityItem</h1><p class="g-lede">Every movement, newest first, each with a receipt.</p></header><div class="g-body"><figure class="g-stage" data-w="640" data-h="552"><div class="g-stage__frame"><iframe title="ActivityItem preview" loading="lazy" data-src="components/ActivityItem/preview.html" style="height:552px"></iframe></div><figcaption><span>Shown at 640px wide</span><a href="components/ActivityItem/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>One movement of money or change of rule, in a feed ordered newest first. Wrap items in <code>ActivityList</code>.</p>
+<p><strong>Provide:</strong> <code>kind</code>, <code>title</code>, <code>detail</code> (usually the pocket name), <code>time</code>, <code>amount</code>, <code>status</code>, <code>href</code> to the receipt on the explorer.</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Kind</th>
+<th>Title example</th>
+<th>Amount</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>spent</code></td>
+<td>Paid 0x3f2a…9c1e</td>
+<td>minus, ink</td>
+</tr>
+<tr>
+<td><code>funded</code></td>
+<td>Added by Ṣadé</td>
+<td>plus, green</td>
+</tr>
+<tr>
+<td><code>requested</code></td>
+<td>Asked for textbooks</td>
+<td>muted, with Pending</td>
+</tr>
+<tr>
+<td><code>approved</code></td>
+<td>Approved: rice and palm oil</td>
+<td>minus, ink</td>
+</tr>
+<tr>
+<td><code>declined</code></td>
+<td>Declined: new phone</td>
+<td>muted, with Declined</td>
+</tr>
+<tr>
+<td><code>fee</code></td>
+<td>Fee credit</td>
+<td>minus, ink</td>
+</tr>
+<tr>
+<td><code>locked</code></td>
+<td>Locked until 12 Dec</td>
+<td>none</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Order by block number and log index, never by timestamp: Arc blocks can share a timestamp.</li>
+<li>Every on-chain item links to its receipt. Say "receipt", not "transaction hash".</li>
+<li>Titles wrap to two lines; do not truncate names.</li>
+</ul></div></template><template id="p-PocketCard"><header class="g-head"><p class="g-eyebrow">Components · Pockets</p><h1>PocketCard</h1><p class="g-lede">The core object: label, balance, allowance, actions.</p></header><div class="g-body"><figure class="g-stage" data-w="1000" data-h="392"><div class="g-stage__frame"><iframe title="PocketCard preview" loading="lazy" data-src="components/PocketCard/preview.html" style="height:392px"></iframe></div><figcaption><span>Shown at 1000px wide</span><a href="components/PocketCard/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>The core object of Earmark: one labelled pocket with its balance, its allowance and the next action.</p>
+<p><strong>Provide:</strong> <code>label</code>, <code>icon</code>, <code>hue</code>, <code>balance</code>, <code>rate</code>, <code>limit</code>, <code>spent</code>, <code>resetLabel</code>, <code>view</code> (<code>sender</code> or <code>family</code>), and handlers: <code>onAddMoney</code> and <code>onOpen</code> or <code>href</code> for senders; <code>onPay</code> and <code>onAsk</code> for family.</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>View</th>
+<th>Shows</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sender</code></td>
+<td>Balance, allowance, Locked badge, pending requests count</td>
+<td>Add money (tonal), open (chevron)</td>
+</tr>
+<tr>
+<td><code>family</code></td>
+<td>Balance, allowance</td>
+<td>Pay (tonal) and Ask; a request-only pocket shows one "Ask for a payment" button</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>The lock badge appears only in the sender view: a lock limits the sender, not the family, and would confuse a spender.</li>
+<li>Lay cards out with <code>.ek-grid</code>: one column on phones, two from 600px, three on wide screens. Card actions stay pinned to the bottom so a row lines up.</li>
+<li>The pocket name is written by people in any language and is always set in Inter.</li>
+</ul></div></template><template id="p-RequestCard"><header class="g-head"><p class="g-eyebrow">Components · Pockets</p><h1>RequestCard</h1><p class="g-lede">Anything above the rules waits here for the sender.</p></header><div class="g-body"><figure class="g-stage" data-w="800" data-h="320"><div class="g-stage__frame"><iframe title="RequestCard preview" loading="lazy" data-src="components/RequestCard/preview.html" style="height:320px"></iframe></div><figcaption><span>Shown at 800px wide</span><a href="components/RequestCard/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>A payment the family member asked for that is above the pocket's rules, waiting for the sender.</p>
+<p><strong>Provide:</strong> <code>pocketLabel</code>, <code>icon</code>, <code>hue</code>, <code>amount</code>, <code>rate</code>, <code>memo</code>, <code>to</code>, <code>time</code>, <code>state</code>, <code>onApprove</code>, <code>onDecline</code>.</p>
+<ul>
+<li>"Approve and pay" is tonal because requests repeat in a list; Decline is a quiet ghost button because nothing is lost, the money stays in the pocket.</li>
+<li>While a decision is being sent, set <code>state</code> to <code>approving</code> or <code>declining</code>: the chosen button shows progress and the other is disabled.</li>
+<li>The memo is quoted exactly as written. Do not translate or correct it.</li>
+<li>On phones, requests appear first on the dashboard because they need action.</li>
+</ul></div></template><template id="p-TxStatus"><header class="g-head"><p class="g-eyebrow">Components · Pockets</p><h1>TxStatus</h1><p class="g-lede">Honest progress from wallet to Final.</p></header><div class="g-body"><figure class="g-stage" data-w="800" data-h="264"><div class="g-stage__frame"><iframe title="TxStatus preview" loading="lazy" data-src="components/TxStatus/preview.html" style="height:264px"></iframe></div><figcaption><span>Shown at 800px wide</span><a href="components/TxStatus/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>Honest, step by step progress for anything that goes on-chain, from the wallet prompt to Final.</p>
+<p><strong>Provide:</strong> <code>title</code>, <code>steps</code> (each with <code>label</code>, optional <code>detail</code>, and <code>state</code>: <code>todo</code>, <code>active</code>, <code>done</code>, <code>error</code>), <code>href</code> to the receipt once Final.</p>
+<ul>
+<li>Standard labels: "Confirm in your wallet", "Sending to Arc", "Final". Creating a pocket has two wallet steps: allowing Earmark to move the deposit, then creating the pocket.</li>
+<li>Arc finality is deterministic: once a step says Final it cannot change. Say "Final" and add "This cannot be reversed" for payments.</li>
+<li>The region is a polite live region, so screen readers hear each change once.</li>
+</ul></div></template><template id="p-EmptyState"><header class="g-head"><p class="g-eyebrow">Components · Feedback</p><h1>EmptyState</h1><p class="g-lede">Say what goes here and offer the first step.</p></header><div class="g-body"><figure class="g-stage" data-w="0" data-h="336"><div class="g-stage__frame"><iframe title="EmptyState preview" loading="lazy" data-src="components/EmptyState/preview.html" style="height:336px"></iframe></div><figcaption><span>Fills the available width</span><a href="components/EmptyState/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>What a screen shows before it has content: what belongs here and the first step.</p>
+<p><strong>Provide:</strong> <code>icon</code>, <code>title</code>, a one or two sentence body, and one <code>action</code>.</p>
+<ul>
+<li>Title says what is missing ("No pockets yet"), body says why it is useful, the action starts it.</li>
+<li>Family members see a different empty state: "Nothing here yet. Ṣadé will add money soon." with no action.</li>
+</ul></div></template><template id="p-Notice"><header class="g-head"><p class="g-eyebrow">Components · Feedback</p><h1>Notice</h1><p class="g-lede">Inline messages that stay until the situation changes.</p></header><div class="g-body"><figure class="g-stage" data-w="720" data-h="488"><div class="g-stage__frame"><iframe title="Notice preview" loading="lazy" data-src="components/Notice/preview.html" style="height:488px"></iframe></div><figcaption><span>Shown at 720px wide</span><a href="components/Notice/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>An inline message that stays on the page until the situation changes.</p>
+<p><strong>Provide:</strong> <code>tone</code>, <code>title</code>, the body as children, and an optional <code>action</code>.</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Tone</th>
+<th>Use for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>info</code></td>
+<td>Context: "Proof of concept. Use small amounts."</td>
+</tr>
+<tr>
+<td><code>positive</code></td>
+<td>Something good just happened that changes what people can do: "Ṣadé added $40.00 to Food".</td>
+</tr>
+<tr>
+<td><code>caution</code></td>
+<td>Needs attention soon: "Almost used".</td>
+</tr>
+<tr>
+<td><code>negative</code></td>
+<td>Something failed and needs action: "Payment blocked". It is announced as an alert.</td>
+</tr>
+<tr>
+<td><code>lock</code></td>
+<td>Explains a commitment lock, in calm neutral cotton so it never looks like an error.</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Title first, in a few words; the body says what it means for the reader and what to do next.</li>
+<li>One notice per concern. Stack at most two on a screen.</li>
+</ul></div></template><template id="p-Skeleton"><header class="g-head"><p class="g-eyebrow">Components · Feedback</p><h1>Skeleton</h1><p class="g-lede">Shape of the content while it loads.</p></header><div class="g-body"><figure class="g-stage" data-w="420" data-h="256"><div class="g-stage__frame"><iframe title="Skeleton preview" loading="lazy" data-src="components/Skeleton/preview.html" style="height:256px"></iframe></div><figcaption><span>Shown at 420px wide</span><a href="components/Skeleton/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>Placeholder shapes that match the content while it loads from Arc.</p>
+<p><strong>Provide:</strong> <code>width</code>, <code>height</code>, <code>radius</code>, or <code>lines</code> for a text block.</p>
+<ul>
+<li>Mirror the real layout: a skeleton pocket card has the icon circle, two text lines, the balance block, the meter and the two buttons.</li>
+<li>Show skeletons only after 300ms, to avoid flashes on fast loads. The pulse stops when reduced motion is on.</li>
+</ul></div></template><template id="p-Toast"><header class="g-head"><p class="g-eyebrow">Components · Feedback</p><h1>Toast</h1><p class="g-lede">Brief confirmation after an action.</p></header><div class="g-body"><figure class="g-stage" data-w="0" data-h="216"><div class="g-stage__frame"><iframe title="Toast preview" loading="lazy" data-src="components/Toast/preview.html" style="height:216px"></iframe></div><figcaption><span>Fills the available width</span><a href="components/Toast/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>A short confirmation after an action. Show it for about five seconds at the bottom of the screen, and pause the timer while it is hovered or focused.</p>
+<p><strong>Provide:</strong> the message, optional <code>tone</code>, <code>action</code> and <code>onClose</code>. Place toasts inside a <code>.ek-toasts</code> container, which sits above the tab bar on phones.</p>
+<ul>
+<li>Use for results people expect: "Paid $12.50 from Food", "Address copied".</li>
+<li>Never use a toast for errors that need a decision; use a <code>Notice</code> or keep the sheet open with the error inside it.</li>
+<li>Keep it to one line and at most one action.</li>
+</ul></div></template><template id="p-Sheet"><header class="g-head"><p class="g-eyebrow">Components · Overlays</p><h1>Sheet</h1><p class="g-lede">Bottom sheet on phones, centred dialog from 600px.</p></header><div class="g-body"><figure class="g-stage" data-w="390" data-h="600"><div class="g-stage__frame"><iframe title="Sheet preview" loading="lazy" data-src="components/Sheet/preview.html" style="height:600px"></iframe></div><figcaption><span>Shown at 390px wide</span><a href="components/Sheet/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>A focused task over the current screen: a bottom sheet on phones and a centred dialog from 600px.</p>
+<p><strong>Provide:</strong> <code>open</code>, <code>onClose</code>, <code>title</code>, optional <code>description</code>, the body, and <code>footer</code> with the secondary action first and the primary last.</p>
+<ul>
+<li>Titles are set in Inter because they usually contain a pocket name ("Pay from Owó ilé-ìwé").</li>
+<li>Built on the native <code>dialog</code> element, so focus is trapped, Escape closes it and the page behind is inert.</li>
+<li>On phones the footer stacks with the primary action on top and full width; from 600px it sits on the right.</li>
+<li>Use sheets for Pay, Ask, Add money, Approve and rule changes. Use a full screen instead when the task needs the keypad on a phone (see the Pay screen).</li>
+<li>Closing a sheet with a transaction in progress does not cancel the transaction. Keep the <code>TxStatus</code> visible or show a toast when it finishes.</li>
+</ul></div></template><template id="p-AppBar"><header class="g-head"><p class="g-eyebrow">Components · Navigation</p><h1>AppBar</h1><p class="g-lede">Compact and medium screens; hidden from 1024px.</p></header><div class="g-body"><figure class="g-stage" data-w="390" data-h="136"><div class="g-stage__frame"><iframe title="AppBar preview" loading="lazy" data-src="components/AppBar/preview.html" style="height:136px"></iframe></div><figcaption><span>Shown at 390px wide</span><a href="components/AppBar/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>The sticky top bar on compact and medium screens, with a back button, the title and up to two actions.</p>
+<p><strong>Provide:</strong> <code>title</code>, optional <code>subtitle</code>, <code>back</code> with its label, <code>actions</code> (IconButtons).</p>
+<ul>
+<li>It pads for the device's top safe area. From 1024px it is hidden, and pages use <code>.ek-page__head</code> for their title.</li>
+<li>Titles are short and name the place: the pocket name, "Requests", "Settings".</li>
+</ul></div></template><template id="p-AppShell"><header class="g-head"><p class="g-eyebrow">Components · Navigation</p><h1>AppShell</h1><p class="g-lede">One shell; navigation adapts at 600px and 1024px.</p></header><div class="g-body"><figure class="g-stage" data-w="1280" data-h="608"><div class="g-stage__frame"><iframe title="AppShell preview" loading="lazy" data-src="components/AppShell/preview.html" style="height:608px"></iframe></div><figcaption><span>Shown at 1280px wide</span><a href="components/AppShell/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>The responsive frame for every signed-in screen: tab bar on phones, rail on tablets, side navigation on laptops and desktops.</p>
+<p><strong>Provide:</strong> <code>nav</code> items, an optional <code>navFooter</code>, and the page as children.</p>
+<p>Inside, use the layout classes from <code>bundle.css</code>:</p>
+<div class="g-table"><table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.ek-page</code></td>
+<td>Centred content up to <code>size-content-max</code> with the right gutters and safe-area padding for each size.</td>
+</tr>
+<tr>
+<td><code>.ek-page__head</code>, <code>__eyebrow</code>, <code>__title</code>, <code>__lede</code></td>
+<td>Page title block; actions sit on its right. Add <code>is-people</code> to the title when it is a pocket or person's name.</td>
+</tr>
+<tr>
+<td><code>.ek-section</code>, <code>__head</code>, <code>__title</code></td>
+<td>A titled group within a page.</td>
+</tr>
+<tr>
+<td><code>.ek-grid</code></td>
+<td>Card grid: as many 280px-minimum columns as fit.</td>
+</tr>
+<tr>
+<td><code>.ek-split</code></td>
+<td>Main column plus a 336px side column from 1024px.</td>
+</tr>
+<tr>
+<td><code>.ek-split__lead</code></td>
+<td>The side column's content that comes first on phones (requests).</td>
+</tr>
+<tr>
+<td><code>.ek-panel</code></td>
+<td>A bordered container for lists.</td>
+</tr>
+<tr>
+<td><code>.ek-stack</code></td>
+<td>Vertical stack with a 16px gap.</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>A skip link to the content appears on keyboard focus.</li>
+</ul></div></template><template id="p-SideNav"><header class="g-head"><p class="g-eyebrow">Components · Navigation</p><h1>SideNav</h1><p class="g-lede">Rail from 600px, full side navigation from 1024px.</p></header><div class="g-body"><figure class="g-stage" data-w="1100" data-h="460"><div class="g-stage__frame"><iframe title="SideNav preview" loading="lazy" data-src="components/SideNav/preview.html" style="height:460px"></iframe></div><figcaption><span>Shown at 1100px wide</span><a href="components/SideNav/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>Navigation for larger screens: an 88px rail from 600px and a 256px side panel with the wordmark from 1024px.</p>
+<p><strong>Provide:</strong> the same <code>items</code> as <code>TabBar</code>, and an optional <code>footer</code> (the connected address).</p>
+<ul>
+<li>Use <code>AppShell</code> rather than placing it by hand; it swaps between TabBar and SideNav at the breakpoints.</li>
+</ul></div></template><template id="p-TabBar"><header class="g-head"><p class="g-eyebrow">Components · Navigation</p><h1>TabBar</h1><p class="g-lede">Bottom navigation below 600px, three to five items.</p></header><div class="g-body"><figure class="g-stage" data-w="390" data-h="150"><div class="g-stage__frame"><iframe title="TabBar preview" loading="lazy" data-src="components/TabBar/preview.html" style="height:150px"></iframe></div><figcaption><span>Shown at 390px wide</span><a href="components/TabBar/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>Bottom navigation on phones, with three to five destinations.</p>
+<p><strong>Provide:</strong> <code>items</code>, each with <code>icon</code>, <code>label</code>, <code>href</code> or <code>onClick</code>, <code>active</code>, and an optional <code>badge</code> count.</p>
+<ul>
+<li>Sender: Pockets, Requests, Activity, Settings. Family: Home, Activity, Settings.</li>
+<li>The active item uses the filled icon on an indigo pill and brand text. Counts are announced ("2 waiting").</li>
+<li>It pads for the bottom safe area and hides from 600px, where <code>SideNav</code> takes over.</li>
+<li>Hide it on focused task screens such as Pay.</li>
+</ul></div></template><template id="p-FamilyHomeScreen"><header class="g-head"><p class="g-eyebrow">Screens</p><h1>Family home, phone</h1><p class="g-lede">Family view at 390px: big balances, Pay and Ask on every pocket.</p></header><div class="g-body"><figure class="g-stage" data-w="390" data-h="1336"><div class="g-stage__frame"><iframe title="Family home, phone preview" loading="lazy" data-src="components/FamilyHomeScreen/preview.html" style="height:1336px"></iframe></div><figcaption><span>Shown at 390px wide</span><a href="components/FamilyHomeScreen/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>What the family member sees: their pockets, what they can spend this week, and Pay or Ask on each.</p>
+<ul>
+<li>The sender's name appears in the lede and the notice, in Inter, because names are typed by people.</li>
+<li>A request-only pocket shows one "Ask for a payment" button. A pocket at its limit keeps Pay visible but disabled, with the reason above it.</li>
+<li>A single line at the end explains fees in plain words.</li>
+</ul></div></template><template id="p-PayScreen"><header class="g-head"><p class="g-eyebrow">Screens</p><h1>Pay, phone</h1><p class="g-lede">Paying at 390px: amount first, keypad in reach of the thumb.</p></header><div class="g-body"><figure class="g-stage" data-w="390" data-h="844"><div class="g-stage__frame"><iframe title="Pay, phone preview" loading="lazy" data-src="components/PayScreen/preview.html" style="height:844px"></iframe></div><figcaption><span>Shown at 390px wide</span><a href="components/PayScreen/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>The focused payment flow on a phone: amount first, payee, keypad in thumb reach, one primary button.</p>
+<ul>
+<li>No tab bar: a task screen has one way out, the back button.</li>
+<li>The primary button always states the amount ("Pay $12.50") or what is missing ("Enter an amount").</li>
+<li>From 600px the same task opens as a <code>Sheet</code> with the amount typed directly.</li>
+</ul></div></template><template id="p-SenderDashboardPhoneScreen"><header class="g-head"><p class="g-eyebrow">Screens</p><h1>Sender dashboard, phone</h1><p class="g-lede">The same dashboard at 390px: tab bar, requests first.</p></header><div class="g-body"><figure class="g-stage" data-w="390" data-h="2576"><div class="g-stage__frame"><iframe title="Sender dashboard, phone preview" loading="lazy" data-src="components/SenderDashboardPhoneScreen/preview.html" style="height:2576px"></iframe></div><figcaption><span>Shown at 390px wide</span><a href="components/SenderDashboardPhoneScreen/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>The same markup as the desktop dashboard at phone width.</p>
+<ul>
+<li>The tab bar replaces the side navigation. <code>.ek-split__lead</code> moves "Waiting for you" above the pockets, because requests need action first.</li>
+<li>Nothing is hidden: the layout reflows, it does not remove content.</li>
+</ul></div></template><template id="p-SenderDashboardScreen"><header class="g-head"><p class="g-eyebrow">Screens</p><h1>Sender dashboard, desktop</h1><p class="g-lede">Sender dashboard at 1280px: side navigation, pockets beside requests.</p></header><div class="g-body"><figure class="g-stage" data-w="1280" data-h="1216"><div class="g-stage__frame"><iframe title="Sender dashboard, desktop preview" loading="lazy" data-src="components/SenderDashboardScreen/preview.html" style="height:1216px"></iframe></div><figcaption><span>Shown at 1280px wide</span><a href="components/SenderDashboardScreen/preview.html" target="_blank" rel="noopener">Open on its own</a></figcaption></figure><p>The sender's home at desktop width, built only from system components and layout classes.</p>
+<ul>
+<li>Side navigation at 256px; page head with the total and two actions; pockets in a two-column <code>.ek-grid</code>; requests and activity in the 336px <code>.ek-split</code> side column.</li>
+<li>Exactly one primary button: New pocket.</li>
+</ul></div></template>
+<script>
+(function () {
+  var root = document.documentElement;
+  var app = document.querySelector('.g-app');
+  var main = document.getElementById('main');
+  var menu = document.querySelector('.g-menu');
+  var scrim = document.querySelector('.g-scrim');
+  var themeBtn = document.querySelector('.g-theme');
+  var themeLabel = themeBtn.querySelector('.g-theme__label');
+  var links = Array.prototype.slice.call(document.querySelectorAll('.g-nav a[data-page]'));
+  var order = links.map(function (a) { return a.getAttribute('data-page'); });
+
+  function theme() { return root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'; }
+
+  function syncThemeButton() {
+    var dark = theme() === 'dark';
+    themeLabel.textContent = dark ? 'Light' : 'Dark';
+    themeBtn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+  }
+
+  function frames() { return Array.prototype.slice.call(main.querySelectorAll('.g-stage')); }
+
+  function setFrameTheme(iframe) {
+    iframe.src = iframe.getAttribute('data-src') + '#theme=' + theme();
+  }
+
+  function fit(fig) {
+    var frame = fig.querySelector('.g-stage__frame');
+    var iframe = frame.querySelector('iframe');
+    var w = +fig.getAttribute('data-w') || 0;
+    // Fixed-width previews render at the width they were measured at, so their marker height is exact.
+    // Fluid previews reflow with the column, so they take the height the preview reports.
+    var h = (!w && +fig.getAttribute('data-rh')) || +fig.getAttribute('data-h') || 200;
+    var avail = frame.clientWidth;
+    if (w && w > avail) {
+      var s = avail / w;
+      iframe.style.width = w + 'px';
+      iframe.style.height = h + 'px';
+      iframe.style.transform = 'scale(' + s + ')';
+      iframe.style.margin = '0';
+      frame.style.height = Math.ceil(h * s) + 'px';
+    } else {
+      iframe.style.width = w ? w + 'px' : '100%';
+      iframe.style.height = h + 'px';
+      iframe.style.transform = 'none';
+      iframe.style.margin = '0 auto';
+      frame.style.height = h + 'px';
+    }
+  }
+
+  function fitAll() { frames().forEach(fit); }
+
+  window.addEventListener('message', function (e) {
+    var d = e.data;
+    if (!d || d.type !== 'ek-preview-height' || !(d.h > 0)) return;
+    frames().forEach(function (fig) {
+      var iframe = fig.querySelector('iframe');
+      if (iframe.contentWindow === e.source) {
+        var prev = +fig.getAttribute('data-rh') || 0;
+        if (Math.abs(prev - d.h) > 1) { fig.setAttribute('data-rh', d.h); fit(fig); }
+      }
+    });
+  });
+
+  var raf = 0;
+  window.addEventListener('resize', function () {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(fitAll);
+  });
+
+  function pager(id) {
+    var i = order.indexOf(id);
+    var html = '';
+    if (i > 0) html += '<a class="g-pager__prev" href="#/' + order[i - 1] + '"><span>Previous</span><strong>' + links[i - 1].textContent + '</strong></a>';
+    if (i >= 0 && i < order.length - 1) html += '<a class="g-pager__next" href="#/' + order[i + 1] + '"><span>Next</span><strong>' + links[i + 1].textContent + '</strong></a>';
+    var nav = document.createElement('nav');
+    nav.className = 'g-pager';
+    nav.setAttribute('aria-label', 'Previous and next page');
+    nav.innerHTML = html;
+    return nav;
+  }
+
+  function openNav(open) {
+    app.classList.toggle('is-open', open);
+    menu.setAttribute('aria-expanded', open ? 'true' : 'false');
+    scrim.hidden = !open;
+    if (open) { var cur = document.querySelector('.g-nav a[aria-current]') || links[0]; cur.focus(); }
+  }
+
+  function show(focus) {
+    var id = (location.hash.match(/^#\/([\w-]+)/) || [])[1] || 'overview';
+    var tpl = document.getElementById('p-' + id);
+    if (!tpl) { id = 'overview'; tpl = document.getElementById('p-overview'); }
+    main.innerHTML = '';
+    main.appendChild(tpl.content.cloneNode(true));
+    main.appendChild(pager(id));
+    links.forEach(function (a) {
+      if (a.getAttribute('data-page') === id) a.setAttribute('aria-current', 'page');
+      else a.removeAttribute('aria-current');
+    });
+    var h1 = main.querySelector('h1');
+    document.title = (id === 'overview' ? '' : (h1 ? h1.textContent + ' · ' : '')) + 'Earmark design system';
+    frames().forEach(function (fig) { setFrameTheme(fig.querySelector('iframe')); fit(fig); });
+    if (focus) {
+      openNav(false);
+      window.scrollTo(0, 0);
+      main.focus({ preventScroll: true });
+    }
+  }
+
+  themeBtn.addEventListener('click', function () {
+    var next = theme() === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('ek-gallery-theme', next); } catch (e) {}
+    syncThemeButton();
+    main.querySelectorAll('.g-stage iframe').forEach(setFrameTheme);
+  });
+
+  if (window.matchMedia) {
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    var onChange = function () {
+      var saved = null;
+      try { saved = localStorage.getItem('ek-gallery-theme'); } catch (e) {}
+      if (saved) return;
+      root.setAttribute('data-theme', mq.matches ? 'dark' : 'light');
+      syncThemeButton();
+      main.querySelectorAll('.g-stage iframe').forEach(setFrameTheme);
+    };
+    if (mq.addEventListener) mq.addEventListener('change', onChange);
+  }
+
+  menu.addEventListener('click', function () { openNav(!app.classList.contains('is-open')); });
+  scrim.addEventListener('click', function () { openNav(false); menu.focus(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && app.classList.contains('is-open')) { openNav(false); menu.focus(); }
+  });
+  window.addEventListener('hashchange', function () { show(true); });
+
+  syncThemeButton();
+  show(false);
+})();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+  <meta name="theme-color" content="#F9F6F2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0B0E18" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="Purpose-bound USDC pockets for money sent home, settled on Arc.">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icons/earmark-mark.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="preload" href="/fonts/Inter-Variable.woff2" as="font" type="font/woff2" crossorigin>
+  <script>
+    (function () {
+      var saved = null;
+      try { saved = localStorage.getItem('ek-theme'); } catch (e) {}
+      var dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    })();
+  </script>
+  <title>Earmark</title>
+</head>
+<body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body>
+</html>

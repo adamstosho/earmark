@@ -1,0 +1,31 @@
+{
+  "network": "arcTestnet",
+  "chainId": 5042002,
+  "contract": "EarmarkPockets",
+  "address": "0x68C480758172bBC94858B98F6E5E356FA30e3080",
+  "deployer": "0x1a98d7b853075Fed1Fe7644D2c36E4168E8bfbCE",
+  "transactionHash": "0x88bd2769fb7ad810bec842ab086f11b1e3d1a9968b8823a696493e7c60b034bb",
+  "blockNumber": 64978753,
+  "timestamp": "2026-10-01T17:03:54Z",
+  "commit": "9115799 (working tree, C56 not committed)",
+  "constructorArgs": {
+    "usdc": "0x3600000000000000000000000000000000000000"
+  },
+  "compiler": {
+    "solc": "0.8.28",
+    "optimizer": true,
+    "runs": 200,
+    "evmVersion": "cancun"
+  },
+  "gasUsed": 3072497,
+  "effectiveGasPriceGwei": 21,
+  "feePaidUSDC": "0.064522437",
+  "explorer": "https://explorer.testnet.arc.io/address/0x68C480758172bBC94858B98F6E5E356FA30e3080",
+  "receipt": "https://explorer.testnet.arc.io/tx/0x88bd2769fb7ad810bec842ab086f11b1e3d1a9968b8823a696493e7c60b034bb",
+  "checks": {
+    "status": "success (1)",
+    "usdc()": "0x3600000000000000000000000000000000000000",
+    "pocketCount()": 0,
+    "bytecode": "Identical to `forge inspect EarmarkPockets deployedBytecode` from the working tree on 1 Oct 2026 except the 9 immutable references to the USDC address. Replaces the 29 Sep deployment at 0x86704058f4D5374653f21C6Ad6eBdC6BCCB218e4."
+  }
+}

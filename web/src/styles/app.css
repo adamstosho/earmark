@@ -1,0 +1,172 @@
+/* Earmark app layout. Tokens only (D8): no raw colours and no font sizes here; text styles come from the
+   .ek-type-* classes and the components. Breakpoints are the design system's 600px, 1024px and 1440px. */
+
+/* Keyboard focus for the app's own controls, matching the design system's ring. */
+.app-pick:focus-visible,
+.app-plain:focus-visible,
+.app-choice input:focus-visible + .app-choice__box {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.app-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.app-row--end { justify-content: flex-end; }
+.app-grow { flex: 1 1 auto; min-width: 0; }
+.app-muted { color: var(--ink-muted); }
+.app-subtle { color: var(--ink-subtle); }
+.app-stack-sm { display: grid; gap: var(--space-2); }
+.app-stack-lg { display: grid; gap: var(--space-6); }
+.app-reading { max-width: var(--size-reading-max); }
+.app-center { text-align: center; }
+
+/* System notices at the top of a page; takes no space when there are none. */
+.app-notices { margin-bottom: var(--space-6); }
+.app-notices:empty { display: none; }
+
+/* Page head that shows only where the app bar is hidden (from 1024px). */
+.app-head-wide { display: none; }
+@media (min-width: 1024px) {
+  .app-head-wide { display: flex; }
+}
+
+/* A line of small print with a leading icon, such as the fee note on the family home. */
+.app-note { display: flex; align-items: flex-start; gap: var(--space-2); color: var(--ink-muted); padding: 0 var(--space-1); }
+.app-note .ek-icon { flex: none; margin-top: 2px; }
+
+/* A card that is not a pocket or request card: summaries, rule blocks, links to share. */
+.app-card {
+  display: grid; gap: var(--space-4); padding: var(--space-4);
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);
+}
+@media (min-width: 600px) {
+  .app-card { padding: var(--space-5); }
+}
+
+/* Pocket page top block. */
+.app-pockethead { display: flex; align-items: center; gap: var(--space-3); }
+.app-rules { display: grid; gap: var(--space-3); }
+.app-rules li { display: flex; align-items: flex-start; gap: var(--space-3); color: var(--ink-muted); }
+.app-rules li .ek-icon { flex: none; margin-top: 2px; color: var(--ink-subtle); }
+.app-rules li.is-lock .ek-icon { color: var(--accent-text); }
+
+/* Lists of people and payees. */
+.app-list { display: grid; }
+.app-list > li { display: flex; align-items: center; gap: var(--space-3); min-height: var(--size-tap-min); padding: var(--space-2) 0; }
+.app-list > li + li { border-top: 1px solid var(--line); }
+
+/* Icon and colour pickers for a new pocket (radio groups). */
+.app-picker { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.app-pick {
+  position: relative; display: grid; place-items: center; width: var(--size-tap-min); height: var(--size-tap-min);
+  padding: 0; border: 2px solid transparent; border-radius: var(--radius-full); background: none; cursor: pointer;
+}
+.app-pick[aria-checked='true'] { border-color: var(--brand); }
+.app-pick .ek-picon { width: 36px; height: 36px; }
+.app-swatch { display: block; width: 28px; height: 28px; border-radius: var(--radius-full); }
+.app-swatch[data-hue='palm'] { background: var(--pocket-palm); }
+.app-swatch[data-hue='sky'] { background: var(--pocket-sky); }
+.app-swatch[data-hue='clay'] { background: var(--pocket-clay); }
+.app-swatch[data-hue='teal'] { background: var(--pocket-teal); }
+.app-swatch[data-hue='plum'] { background: var(--pocket-plum); }
+.app-swatch[data-hue='olive'] { background: var(--pocket-olive); }
+
+/* A radio list of choices (payees). */
+.app-choice { display: flex; align-items: center; gap: var(--space-3); min-height: var(--size-tap-min); padding: var(--space-2) 0; cursor: pointer; }
+.app-choice input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.app-choice__box {
+  flex: none; width: 22px; height: 22px; border-radius: var(--radius-full); border: 2px solid var(--line-strong); background: var(--surface);
+}
+.app-choice input:checked + .app-choice__box { border: 7px solid var(--brand); }
+.app-choice + .app-choice { border-top: 1px solid var(--line); }
+
+/* A fieldset without the browser's frame. */
+.app-fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+
+/* Form groups in the New pocket form. */
+.app-form { display: grid; gap: var(--space-6); }
+.app-group { display: grid; gap: var(--space-4); }
+.app-group + .app-group { padding-top: var(--space-6); border-top: 1px solid var(--line); }
+
+/* A link inside running text (inline links are exempt from the 44px target rule). */
+.app-inline-link { color: var(--brand-text); text-decoration: underline; text-underline-offset: 3px; }
+.app-inline-link:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+
+/* A plain text button for small inline actions ("More options"). */
+.app-plain {
+  display: inline-flex; align-items: center; gap: var(--space-1); min-height: var(--size-tap-min); padding: 0;
+  border: 0; background: none; color: var(--brand-text); cursor: pointer;
+}
+
+/* Links to share. */
+.app-linkbox {
+  display: flex; align-items: center; gap: var(--space-2); padding: var(--space-3) var(--space-4);
+  background: var(--surface-sunken); border-radius: var(--radius-md); overflow-wrap: anywhere;
+}
+
+/* Full-screen task on phones (Pay, Ask, Add money, New pocket): no tab bar, one way out. */
+.app-task { display: flex; flex-direction: column; min-height: 100dvh; background: var(--canvas); }
+.app-task__body {
+  flex: 1; display: flex; flex-direction: column; gap: var(--space-5);
+  padding: var(--space-5) var(--space-4) var(--space-4);
+}
+.app-task__body > .ek-keypad { margin-top: auto; }
+.app-task__foot {
+  position: sticky; bottom: 0; display: grid; gap: var(--space-2);
+  padding: var(--space-3) var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
+  background: var(--canvas); border-top: 1px solid var(--line);
+}
+
+/* The payee row on the Pay screen. */
+.app-payee {
+  display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-3) var(--space-3) var(--space-4);
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md);
+}
+
+/* Landing. */
+.app-landing { min-height: 100dvh; background: var(--canvas); }
+.app-landing__bar {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+  max-width: var(--size-content-max); margin: 0 auto;
+  padding: calc(var(--space-4) + env(safe-area-inset-top, 0px)) var(--space-4) 0;
+}
+.app-landing__bar .ek-logo { height: 32px; }
+.app-hero { display: grid; gap: var(--space-8); }
+.app-hero__copy { display: grid; gap: var(--space-5); align-content: start; }
+.app-hero__cta { display: grid; gap: var(--space-2); }
+.app-steps { display: grid; gap: var(--space-4); }
+.app-step { display: grid; grid-template-columns: auto 1fr; gap: var(--space-1) var(--space-4); align-items: start; }
+.app-step__num {
+  grid-row: span 2; display: grid; place-items: center; width: 36px; height: 36px; border-radius: var(--radius-full);
+  background: var(--brand-soft); color: var(--brand-text);
+}
+.app-landing__section { margin-top: var(--space-12); display: grid; gap: var(--space-5); }
+@media (min-width: 600px) {
+  .app-landing__bar { padding-left: var(--space-6); padding-right: var(--space-6); }
+  .app-hero__cta { grid-auto-flow: column; justify-content: start; align-items: center; }
+  .app-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) {
+  .app-landing__bar { padding: var(--space-8) var(--space-8) 0; }
+  .app-hero { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); align-items: center; gap: var(--space-16); padding: var(--space-10) 0; }
+  .app-landing__section { margin-top: var(--space-16); }
+}
+
+/* The live pocket beside the landing headline. */
+.app-figure { margin: 0; }
+
+/* Top bar on the public pocket page. */
+.app-topbar {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+  max-width: var(--size-content-max); margin: 0 auto;
+  padding: calc(var(--space-3) + env(safe-area-inset-top, 0px)) var(--space-4) 0;
+}
+.app-topbar .ek-logo { height: 28px; }
+@media (min-width: 600px) {
+  .app-topbar { padding-left: var(--space-6); padding-right: var(--space-6); }
+}
+
+/* Centred states: loading the app, not configured, connect first. */
+.app-center-screen { min-height: 100dvh; display: grid; place-items: center; padding: var(--space-6) var(--space-4); }
+.app-center-screen > * { max-width: var(--size-reading-max); width: 100%; }
+.app-logo { height: 32px; }
+.app-problems { display: grid; gap: var(--space-2); padding-left: var(--space-5); list-style: disc; }
