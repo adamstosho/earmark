@@ -154,3 +154,63 @@ a:hover > svg.ek-logo .ek-logo__tag { animation: app-tag-idle 1.6s ease-in-out i
 
 /* The public pocket page reads as one centred column at every width. */
 .app-topbar--narrow, .ek-page.app-narrow { max-width: calc(var(--size-reading-max) + var(--space-16)); }
+
+/* ------------------------------------------------------------------ theme switch
+   One floating button on every page: a sun that turns into a moon. Where View Transitions exist, the new theme spreads out
+   from the press point (--ek-reveal-*, set by lib/theme.ts); elsewhere the theme changes at once. */
+.app-themeswitch {
+  position: fixed; z-index: var(--z-nav); right: calc(var(--space-4) + env(safe-area-inset-right, 0px));
+  bottom: calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
+  display: grid; place-items: center; width: 48px; height: 48px; padding: 0; cursor: pointer; color: var(--pocket-palm);
+  border: 1px solid var(--line); border-radius: var(--radius-full); background: var(--surface-raised); box-shadow: var(--shadow-md);
+  transition: transform var(--ek-dur) var(--ek-ease), box-shadow var(--ek-dur) var(--ek-ease), color var(--ek-dur-slow) var(--ek-ease);
+}
+.app-themeswitch[data-tabbar] { bottom: calc(var(--size-tabbar) + env(safe-area-inset-bottom, 0px) + var(--space-4)); }
+.app-themeswitch[data-dark] { color: var(--ink); }
+.app-themeswitch:hover { transform: translateY(-2px) scale(1.06); box-shadow: var(--shadow-lg); }
+.app-themeswitch:active { transform: scale(0.94); }
+.app-themeswitch:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
+@media (min-width: 600px) {
+  .app-themeswitch, .app-themeswitch[data-tabbar] { right: var(--space-6); bottom: var(--space-6); }
+}
+
+.app-themeswitch__svg { width: 26px; height: 26px; overflow: visible; }
+.app-themeswitch__svg line { stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.app-themeswitch__body { fill: currentColor; }
+.app-themeswitch__star { fill: currentColor; opacity: 0; transform-box: fill-box; transform-origin: center; }
+.app-themeswitch__rays, .app-themeswitch__body, .app-themeswitch__bite, .app-themeswitch__star {
+  transition: transform 520ms var(--ek-ease), opacity 360ms var(--ek-ease);
+}
+.app-themeswitch__rays { transform-origin: 12px 12px; animation: app-sun-turn 24s linear infinite; }
+.app-themeswitch__body { transform-origin: 12px 12px; }
+/* The bite that turns the sun into a crescent slides in from the corner. */
+.app-themeswitch__bite { transform: translate(0, 0); }
+
+.app-themeswitch[data-dark] .app-themeswitch__rays { opacity: 0; transform: scale(0.4) rotate(90deg); animation: none; }
+.app-themeswitch[data-dark] .app-themeswitch__body { transform: rotate(-35deg) scale(1.12); }
+.app-themeswitch[data-dark] .app-themeswitch__bite { transform: translate(-14px, 6px); }
+.app-themeswitch[data-dark] .app-themeswitch__star { opacity: 1; animation: app-twinkle-star 3.2s ease-in-out 0.5s infinite; }
+.app-themeswitch[data-dark] .app-themeswitch__star--b { animation-delay: 1.6s; }
+.app-themeswitch:hover .app-themeswitch__body { animation: app-wobble 700ms var(--ek-ease); }
+
+@keyframes app-sun-turn { to { transform: rotate(360deg); } }
+@keyframes app-twinkle-star { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.6); } }
+@keyframes app-wobble { 30% { rotate: 14deg; } 60% { rotate: -8deg; } }
+
+/* The reveal: the old page stays put while the new theme grows out of the button. */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+:root[data-theme-switching]::view-transition-new(root) { animation: app-reveal 650ms var(--ek-ease) both; z-index: 2; }
+:root[data-theme-switching]::view-transition-old(root) { z-index: 1; }
+@keyframes app-reveal {
+  from { clip-path: circle(0 at var(--ek-reveal-x) var(--ek-reveal-y)); }
+  to { clip-path: circle(var(--ek-reveal-r) at var(--ek-reveal-x) var(--ek-reveal-y)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-themeswitch, .app-themeswitch * { animation: none !important; transition: none !important; }
+  .app-themeswitch:hover { transform: none; }
+  .app-themeswitch[data-dark] .app-themeswitch__star { opacity: 1; }
+}
+@media (forced-colors: active) {
+  .app-themeswitch { border-color: ButtonText; color: ButtonText; }
+}

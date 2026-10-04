@@ -28,6 +28,23 @@ const EACH_PERIOD: Record<PeriodKind, string> = {
 export const copy = {
   appName: 'Earmark',
 
+  // Browser tab and history titles, one per screen (set by lib/title.ts).
+  titles: {
+    landing: 'Earmark: money sent home, with a purpose',
+    send: 'Pockets',
+    requests: 'Requests',
+    activity: 'Activity',
+    newPocket: 'New pocket',
+    pocket: 'Pocket',
+    family: 'Home',
+    familyActivity: 'Activity',
+    pay: 'Pay',
+    ask: 'Ask',
+    view: 'Pocket',
+    settings: 'Settings',
+    notFound: 'Page not found',
+  },
+
   period: {
     word: (p: PeriodKind) => PERIOD_WORD[p],
     limitLabel: (p: PeriodKind) => LIMIT_LABEL[p],
@@ -380,6 +397,11 @@ export const copy = {
     title: 'Pocket',
     createdBy: (name: string) => `Created by ${name}`,
     spentBy: (name: string) => `${name} pays from it`,
+  },
+
+  themeSwitch: {
+    toDark: 'Switch to dark theme',
+    toLight: 'Switch to light theme',
   },
 
   settings: {

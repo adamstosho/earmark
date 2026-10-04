@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useState, useSyncExternalStore, type ReactNode } from 'react';
 import { useDisconnect } from 'wagmi';
 import { useEnv } from '../app/env';
 import { copy } from '../copy';
@@ -7,7 +7,7 @@ import { useRoles } from '../data/hooks';
 import { removeName, setName, useNames } from '../lib/names';
 import { navigate, paths } from '../lib/router';
 import { parseAddress } from '../lib/text';
-import { setThemePref, themePref, type ThemePref } from '../lib/theme';
+import { setThemePref, subscribeTheme, themePref, type ThemePref } from '../lib/theme';
 import { addressUrl } from '../config';
 import { FamilyShell, PageNotices, SenderShell, homeFor, setStoredView, type View } from '../components/Shells';
 import { ConnectButton, copyText, familyLink, shareLink, useWallet } from '../components/System';
@@ -32,7 +32,7 @@ export function Settings() {
   const names = useNames();
   const roles = useRoles(address);
   const disconnect = useDisconnect();
-  const [theme, setTheme] = useState<ThemePref>(themePref());
+  const theme = useSyncExternalStore(subscribeTheme, themePref);
   const [view, setView] = useState<View>(roles.data ? homeFor(roles.data) : 'sender');
   const [newAddress, setNewAddress] = useState('');
   const [newName, setNewName] = useState('');
@@ -72,7 +72,6 @@ export function Settings() {
             options={[...copy.settings.themeOptions]}
             onChange={(v) => {
               const pref: ThemePref = v === 'light' || v === 'dark' ? v : 'system';
-              setTheme(pref);
               setThemePref(pref);
             }}
           />

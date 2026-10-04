@@ -98,7 +98,7 @@ cast receipt --rpc-url arc_mainnet <TX_HASH> blockNumber
 ## 5. Hosting on Vercel
 
 - Import the GitHub repository. Root directory: `web`. Framework preset: Vite. Build command `npm run build`, output `dist` (the defaults).
-- Environment variables (Production): `VITE_NETWORK=arcMainnet`, `VITE_POCKETS_ADDRESS`, `VITE_DEPLOY_BLOCK`, `VITE_RPC_URL=https://rpc.mainnet.arc.io`, and `VITE_DEMO_POCKET_ID` once a demo pocket exists.
+- Environment variables (Production): `VITE_NETWORK=arcMainnet`, `VITE_POCKETS_ADDRESS`, `VITE_DEPLOY_BLOCK`, `VITE_RPC_URL=https://rpc.mainnet.arc.io`, `VITE_DEMO_POCKET_ID` once a demo pocket exists, and `VITE_SITE_URL` (the live address, no trailing slash) for the canonical link, share image and `sitemap.xml`.
 - No rewrites: every route is a hash route (`/#/…`).
 
 ## 6. Source verification (PRD Section 12, step 15)

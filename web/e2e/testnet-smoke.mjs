@@ -49,9 +49,9 @@ async function visit(name, account, path, expectText, width = 390) {
 }
 
 await visit('landing', null, null, 'Money sent home, with a purpose.');
-await visit('public page, no pocket yet', null, '/#/view/1', 'This pocket does not exist');
-await visit('sender dashboard (Sender wallet)', SENDER, '/#/send', 'No pockets yet', 1280);
-await visit('family home (Family wallet)', FAMILY, '/#/family', 'Nothing here yet');
+await visit('public page (pocket 1)', null, '/#/view/1', 'In this pocket');
+await visit('sender dashboard (Sender wallet)', SENDER, '/#/send', 'Share family link', 1280);
+await visit('family home (Family wallet)', FAMILY, '/#/family', 'Pay from these pockets whenever you need to.');
 await visit('settings', SENDER, '/#/settings', 'Earmark on the Arc explorer');
 await browser.close();
 

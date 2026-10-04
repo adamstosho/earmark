@@ -6,6 +6,19 @@
   <meta name="theme-color" content="#F9F6F2" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0B0E18" media="(prefers-color-scheme: dark)">
   <meta name="description" content="Purpose-bound USDC pockets for money sent home, settled on Arc.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="application-name" content="Earmark">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Earmark">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:title" content="Earmark: money sent home, with a purpose">
+  <meta property="og:description" content="Purpose-bound USDC pockets for money sent home, settled on Arc.">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Earmark: money sent home, with a purpose.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Earmark: money sent home, with a purpose">
+  <meta name="twitter:description" content="Purpose-bound USDC pockets for money sent home, settled on Arc.">
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" href="/icons/earmark-mark.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -18,7 +31,15 @@
       document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
     })();
   </script>
-  <title>Earmark</title>
+  <title>Earmark: money sent home, with a purpose</title>
+  <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"WebApplication","name":"Earmark","description":"Purpose-bound USDC pockets for money sent home, settled on Arc.","applicationCategory":"FinanceApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript and a browser wallet"}
+  </script>
 </head>
-<body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body>
+<body>
+  <noscript>
+    <h1>Earmark</h1>
+    <p>Money sent home, with a purpose. Fund labelled USDC pockets for school fees, food and rent. Your family pays from them under the rules you set. Earmark needs JavaScript to run.</p>
+  </noscript>
+  <div id="root"></div><script type="module" src="/src/main.tsx"></script></body>
 </html>

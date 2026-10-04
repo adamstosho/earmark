@@ -12,6 +12,13 @@ import { configResult } from './config';
 import { ConfigError } from './pages/Misc';
 import { makePublicClient, makeWagmiConfig } from './wagmi';
 
+// A wallet that is locked or has no account answers wagmi's own connect listener with a 4001 rejection that nothing in
+// the app can catch. It is the wallet declining, not an app fault, and the Connect button shows its own message.
+window.addEventListener('unhandledrejection', (event: PromiseRejectionEvent) => {
+  const reason: unknown = event.reason;
+  if (typeof reason === 'object' && reason !== null && 'code' in reason && reason.code === 4001) event.preventDefault();
+});
+
 const container = document.getElementById('root');
 if (!container) throw new Error('Missing #root');
 const root = createRoot(container);

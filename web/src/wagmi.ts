@@ -9,7 +9,7 @@ import type { AppConfig } from './config';
 // (DECISIONS C55); the generic injected connector covers in-app browsers that only set `window.ethereum`.
 
 export function makeWagmiConfig(cfg: AppConfig) {
-  const transport = http(cfg.rpcUrl, { batch: { batchSize: 40, wait: 16 }, retryCount: 3 });
+  const transport = http(cfg.rpcUrl, { batch: { batchSize: 40, wait: 16 }, retryCount: 5 });
   return createConfig({
     chains: [cfg.chain],
     connectors: [injected()],
@@ -31,7 +31,7 @@ declare module 'wagmi' {
 export function makePublicClient(cfg: AppConfig) {
   return createPublicClient({
     chain: cfg.chain,
-    transport: viemHttp(cfg.rpcUrl, { batch: { batchSize: 40, wait: 16 }, retryCount: 3, timeout: 15_000 }),
+    transport: viemHttp(cfg.rpcUrl, { batch: { batchSize: 40, wait: 16 }, retryCount: 5, timeout: 15_000 }),
     batch: { multicall: { wait: 16 } },
     pollingInterval: 1_000,
   });
